@@ -1,0 +1,191 @@
+/* src/pages/Catalog/Catalog.module.css */
+
+.catalogContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  /* Fondo estilo tablero inmersivo */
+  background: radial-gradient(circle at top, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
+  padding-top: 1rem;
+}
+
+/* Header rediseñado: Título a la izquierda, filtros pequeños a la derecha */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+}
+
+.title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 0.2rem;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+/* Nuevos Filtros Superiores (Pequeños y limpios) */
+.topFilters {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.filterGroup select {
+  background-color: rgba(255, 255, 255, 0.03);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  border-radius: 20px; /* Estilo píldora */
+  outline: none;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%239CA3AF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem top 50%;
+  background-size: 0.65rem auto;
+}
+
+.filterGroup select:hover, .filterGroup select:focus {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border-color: var(--accent-cyan);
+}
+
+/* Panel de Resultados */
+.layout {
+  display: flex;
+  flex-direction: column;
+}
+
+.resultsSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.resultsCounter {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.mobileFilterIcon {
+  color: var(--text-primary);
+  cursor: pointer;
+  display: none;
+}
+
+/* Grid de Tarjetas (Más compacto y ajustado) */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+
+/* --- EFECTOS DEL ENFOQUE CINEMATOGRÁFICO (Práctica 8) --- */
+.focusWrapper {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.inFocus {
+  transform: scale(1.03);
+  z-index: 10;
+  position: relative;
+  /* Brillo dorado sutil alrededor de la tarjeta enfocada */
+  filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.15));
+}
+
+.outOfFocus {
+  opacity: 0.4;
+  filter: blur(3px) grayscale(40%);
+  transform: scale(0.97);
+}
+/* -------------------------------------------------------- */
+
+/* Contenedor del botón Cargar Más */
+.loadMoreContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+/* Línea sutil detrás del botón para que se vea más pro */
+.loadMoreContainer::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  z-index: -1;
+}
+
+.loadMoreBtn {
+  background-color: var(--bg-primary) !important;
+  border-radius: 30px !important;
+  padding: 0.5rem 2rem !important;
+}
+
+/* Estados Vacíos y de Carga */
+.emptyState {
+  text-align: center;
+  padding: 4rem 2rem;
+  background-color: transparent;
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(255,255,255,0.1);
+}
+
+.emptyState h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.emptyState p {
+  color: var(--text-secondary);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 0;
+  color: var(--accent-cyan);
+  gap: 1rem;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}

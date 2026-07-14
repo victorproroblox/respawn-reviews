@@ -1,0 +1,29 @@
+/* src/components/SeasonalBanner/SeasonalBanner.module.css */
+.bannerContainer {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.5s ease;
+  z-index: 1000;
+  position: relative;
+}
+
+/* Tema de Verano (Naranja/Amarillo) */
+.summer {
+  background: linear-gradient(90deg, #f59e0b, #ef4444);
+  color: white;
+}
+
+/* Tema de Halloween (Morado/Naranja Oscuro) */
+.halloween {
+  background: linear-gradient(90deg, #7c3aed, #ea580c);
+  color: white;
+}
+
+/* Tema de Invierno (Azul Hielo) */
+.winter {
+  background: linear-gradient(90deg, #3b82f6, #06b6d4);
+  color: white;
+}

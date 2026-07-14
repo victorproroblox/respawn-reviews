@@ -1,0 +1,33 @@
+.btn {
+  padding: 0.5rem 1.2rem;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.primary {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.primary:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.outline {
+  background: transparent;
+  border: 1px solid var(--accent-cyan);
+  color: var(--accent-cyan);
+}
+
+.outline:hover {
+  background: var(--accent-cyan);
+  color: var(--bg-primary);
+}
