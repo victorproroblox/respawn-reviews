@@ -23,8 +23,7 @@ export const Home = () => {
 
     // 2. Lógica de Temporada GOTY (Práctica 7)
     const currentMonth = new Date().getMonth();
-    // TRUCO TEMPORAL: Dejamos el "|| true" para que saques tus capturas
-    const checkGoty = currentMonth === 10 || currentMonth === 11 || true;
+    const checkGoty = currentMonth === 10 || currentMonth === 11;
     setIsGotySeason(checkGoty);
   }, []);
 
