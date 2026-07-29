@@ -1,15 +1,27 @@
 // src/components/Header/Header.jsx
 import { useState } from 'react';
-import { Gamepad2, Menu, X, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Gamepad2, Menu, X, ChevronDown, LogOut, ShieldCheck } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../Button/Button';
 import { SearchBar } from '../SearchBar/SearchBar';
+import { useAuth } from '../../context/AuthContext';
 import styles from './Header.module.css';
 
 export const Header = () => {
   // Estados para controlar cuándo se despliegan los menús
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    setIsMobileMenuOpen(false);
+    navigate('/');
+  };
+
+  const puedeVerPanel = user?.rol === 'Administrador' || user?.rol === 'Editor';
 
   const navLinks = [
     { title: 'Juegos', path: '/games' },
@@ -60,10 +72,30 @@ export const Header = () => {
         </nav>
 
         <div className={styles.auth}>
-          <Link to="/login">
-            <Button variant="outline">Login</Button>
-          </Link>
-          <Button>Registro</Button>
+          {isAuthenticated ? (
+            <>
+              {puedeVerPanel && (
+                <Link to="/panel">
+                  <Button variant="outline">
+                    <ShieldCheck size={16} /> Panel
+                  </Button>
+                </Link>
+              )}
+              <span className={styles.userGreeting}>Hola, {user.nombre}</span>
+              <Button onClick={handleLogout}>
+                <LogOut size={16} /> Salir
+              </Button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
+              <Link to="/register">
+                <Button>Registro</Button>
+              </Link>
+            </>
+          )}
         </div>
 
         {/* BOTÓN HAMBURGUESA PARA MÓVILES */}
@@ -90,10 +122,25 @@ export const Header = () => {
             </Link>
           ))}
           <div className={styles.mobileAuth}>
-            <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
-              <Button variant="outline" style={{ width: '100%' }}>Login</Button>
-            </Link>
-            <Button style={{ width: '100%' }}>Registro</Button>
+            {isAuthenticated ? (
+              <>
+                {puedeVerPanel && (
+                  <Link to="/panel" onClick={() => setIsMobileMenuOpen(false)}>
+                    <Button variant="outline" style={{ width: '100%' }}>Panel</Button>
+                  </Link>
+                )}
+                <Button style={{ width: '100%' }} onClick={handleLogout}>Salir ({user.nombre})</Button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button variant="outline" style={{ width: '100%' }}>Login</Button>
+                </Link>
+                <Link to="/register" onClick={() => setIsMobileMenuOpen(false)}>
+                  <Button style={{ width: '100%' }}>Registro</Button>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       )}

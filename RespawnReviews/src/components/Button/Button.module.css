@@ -31,3 +31,9 @@
   background: var(--accent-cyan);
   color: var(--bg-primary);
 }
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}

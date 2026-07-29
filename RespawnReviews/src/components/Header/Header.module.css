@@ -82,6 +82,13 @@
 .auth {
   display: none;
   gap: 1rem;
+  align-items: center;
+}
+
+.userGreeting {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 @media (min-width: 768px) {

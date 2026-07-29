@@ -3,13 +3,29 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // --- REGISTRO DE USUARIO ---
 const registrarUsuario = async (req, res) => {
     try {
         const { nombre, email, password } = req.body;
 
+        // 0. Validar datos de entrada
+        if (!nombre || !email || !password) {
+            return res.status(400).json({ error: 'Nombre, correo y contraseña son obligatorios.' });
+        }
+        if (nombre.trim().length < 2) {
+            return res.status(400).json({ error: 'El nombre debe tener al menos 2 caracteres.' });
+        }
+        if (!EMAIL_REGEX.test(email)) {
+            return res.status(400).json({ error: 'El correo electrónico no tiene un formato válido.' });
+        }
+        if (password.length < 6) {
+            return res.status(400).json({ error: 'La contraseña debe tener al menos 6 caracteres.' });
+        }
+
         // 1. Verificar si el email ya existe
-        const [users] = await pool.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
+        const [users] = await pool.execute('SELECT id FROM usuarios WHERE email = ?', [email]);
         if (users.length > 0) {
             return res.status(400).json({ error: 'El correo electrónico ya está registrado.' });
         }
@@ -21,7 +37,7 @@ const registrarUsuario = async (req, res) => {
         // 3. Insertar el nuevo usuario
         const [result] = await pool.execute(
             'INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)',
-            [nombre, email, hashedPassword]
+            [nombre.trim(), email.trim().toLowerCase(), hashedPassword]
         );
 
         // 4. Asignar rol de "Usuario" (ID 3 en nuestra BD)
@@ -42,8 +58,13 @@ const loginUsuario = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        // 0. Validar datos de entrada
+        if (!email || !password) {
+            return res.status(400).json({ error: 'Correo y contraseña son obligatorios.' });
+        }
+
         // 1. Buscar al usuario
-        const [users] = await pool.execute('SELECT * FROM usuarios WHERE email = ?', [email]);
+        const [users] = await pool.execute('SELECT * FROM usuarios WHERE email = ?', [email.trim().toLowerCase()]);
         if (users.length === 0) {
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
@@ -77,4 +98,22 @@ const loginUsuario = async (req, res) => {
     }
 };
 
-module.exports = { registrarUsuario, loginUsuario };
+// --- SESIÓN ACTUAL (valida el token y devuelve los datos del usuario) ---
+const obtenerPerfil = async (req, res) => {
+    try {
+        const [users] = await pool.execute(
+            'SELECT id, nombre, email, creado_en FROM usuarios WHERE id = ?',
+            [req.user.id]
+        );
+        if (users.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        res.json({ ...users[0], rol: req.user.rol });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+};
+
+module.exports = { registrarUsuario, loginUsuario, obtenerPerfil };

@@ -110,6 +110,22 @@
   gap: 1.5rem;
 }
 
+.formError {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #FCA5A5;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+}
+
+.formError svg {
+  flex-shrink: 0;
+}
+
 .inputGroup {
   display: flex;
   flex-direction: column;
