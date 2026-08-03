@@ -4,7 +4,7 @@ import { ImagePlus, X, AlertCircle } from 'lucide-react';
 import { Button } from '../Button/Button';
 import styles from './PostForm.module.css';
 
-const MAX_FILE_SIZE_MB = 25;
+const MAX_FILE_SIZE_MB = 200;
 
 export const PostForm = ({ onSubmit }) => {
   const [archivo, setArchivo] = useState(null);

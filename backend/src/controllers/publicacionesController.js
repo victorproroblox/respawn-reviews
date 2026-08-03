@@ -1,4 +1,5 @@
 // src/controllers/publicacionesController.js
+const fs = require('fs/promises');
 const cloudinary = require('../config/cloudinary');
 const pool = require('../config/db');
 
@@ -7,16 +8,9 @@ const PUNTOS_POR_TIPO = {
     video: 100
 };
 
-// Sube el buffer del archivo a Cloudinary vía stream (no se guarda nada en disco)
-const subirACloudinary = (buffer, resourceType) => {
-    return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-            { resource_type: resourceType, folder: 'respawn-reviews/publicaciones' },
-            (error, result) => (error ? reject(error) : resolve(result))
-        );
-        stream.end(buffer);
-    });
-};
+// Sube el archivo temporal (guardado en disco por Multer) a Cloudinary
+const subirACloudinary = (filePath, resourceType) =>
+    cloudinary.uploader.upload(filePath, { resource_type: resourceType, folder: 'respawn-reviews/publicaciones' });
 
 // --- CREAR PUBLICACIÓN ---
 const crearPublicacion = async (req, res) => {
@@ -34,7 +28,13 @@ const crearPublicacion = async (req, res) => {
         const resourceType = tipoContenido === 'video' ? 'video' : 'image';
         const puntosGanados = PUNTOS_POR_TIPO[tipoContenido];
 
-        const resultadoCloudinary = await subirACloudinary(req.file.buffer, resourceType);
+        let resultadoCloudinary;
+        try {
+            resultadoCloudinary = await subirACloudinary(req.file.path, resourceType);
+        } finally {
+            // Borramos el temporal pase lo que pase, para no llenar el disco del servidor
+            await fs.unlink(req.file.path).catch(() => {});
+        }
 
         const connection = await pool.getConnection();
         try {

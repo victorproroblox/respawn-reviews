@@ -1,10 +1,20 @@
 // src/middlewares/uploadMiddleware.js
 const multer = require('multer');
+const os = require('os');
+const path = require('path');
+const crypto = require('crypto');
 
-const MAX_FILE_SIZE_MB = 25;
+const MAX_FILE_SIZE_MB = 200;
 
-// Guardamos el archivo en memoria (buffer) para subirlo directo a Cloudinary sin tocar disco
-const storage = multer.memoryStorage();
+// Escribimos el archivo a un temporal en disco (no en memoria): con archivos de hasta 200MB,
+// guardarlo completo en RAM podría tumbar el servidor si suben varios usuarios a la vez.
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => cb(null, os.tmpdir()),
+    filename: (req, file, cb) => {
+        const nombreUnico = `${Date.now()}-${crypto.randomUUID()}${path.extname(file.originalname)}`;
+        cb(null, nombreUnico);
+    }
+});
 
 const fileFilter = (req, file, cb) => {
     const esImagen = file.mimetype.startsWith('image/');
