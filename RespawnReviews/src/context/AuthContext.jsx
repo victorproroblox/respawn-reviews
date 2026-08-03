@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   const persistSession = (data) => {
     const nextSession = {
       token: data.token,
-      user: { nombre: data.nombre, email: data.email, rol: data.rol },
+      user: { id: data.id, nombre: data.nombre, email: data.email, rol: data.rol },
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(nextSession));
     setSession(nextSession);

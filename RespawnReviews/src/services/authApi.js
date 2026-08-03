@@ -1,5 +1,5 @@
 // src/services/authApi.js
-const API_URL = import.meta.env.VITE_API_URL || 'https://respawn-backend-521m.onrender.com/api';
+export const API_URL = import.meta.env.VITE_API_URL || 'https://respawn-backend-521m.onrender.com/api';
 
 // Hace la petición y normaliza el manejo de errores del backend (formato { error: '...' })
 const request = async (path, options = {}) => {

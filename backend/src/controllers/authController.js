@@ -91,7 +91,7 @@ const loginUsuario = async (req, res) => {
             { expiresIn: '2h' } // La sesión dura 2 horas
         );
 
-        res.json({ message: 'Bienvenido a Respawn Reviews', token, rol, nombre: user.nombre });
+        res.json({ message: 'Bienvenido a Respawn Reviews', token, id: user.id, rol, nombre: user.nombre });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error interno del servidor.' });

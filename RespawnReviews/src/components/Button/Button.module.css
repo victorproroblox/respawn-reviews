@@ -32,6 +32,17 @@
   color: var(--bg-primary);
 }
 
+.danger {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.danger:hover {
+  background: #ef4444;
+  color: white;
+}
+
 .btn:disabled {
   opacity: 0.6;
   cursor: not-allowed;

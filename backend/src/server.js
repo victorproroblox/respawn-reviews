@@ -4,7 +4,9 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const multer = require('multer');
 const authRoutes = require('./routes/authRoutes');
+const publicacionesRoutes = require('./routes/publicacionesRoutes');
 
 // 2. Inicializar Express
 const app = express();
@@ -15,13 +17,26 @@ app.use(express.json()); // Permite recibir datos en formato JSON
 
 // 4. Montar Rutas
 app.use('/api/auth', authRoutes);
+app.use('/api/publicaciones', publicacionesRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
     res.send('¡Servidor Backend de Respawn Reviews funcionando correctamente! 🎮');
 });
 
-// 5. Encender el servidor
+// 5. Manejo centralizado de errores (ej. archivos rechazados o demasiado grandes en Multer)
+app.use((err, req, res, next) => {
+    if (err instanceof multer.MulterError) {
+        return res.status(400).json({ error: `Error al subir el archivo: ${err.message}` });
+    }
+    if (err) {
+        console.error(err);
+        return res.status(400).json({ error: err.message || 'Ocurrió un error inesperado.' });
+    }
+    next();
+});
+
+// 6. Encender el servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo a máxima potencia en el puerto ${PORT}`);

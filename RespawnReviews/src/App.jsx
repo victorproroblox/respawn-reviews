@@ -9,6 +9,7 @@ import { Login } from './pages/Login/Login';
 import { Register } from './pages/Register/Register';
 import { Panel } from './pages/Panel/Panel';
 import { GameDetails } from './pages/GameDetails/GameDetails';
+import { Community } from './pages/Community/Community';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route index element={<Home />} />
 
             <Route path="games" element={<Catalog />} />
+            <Route path="/community" element={<Community />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
 
