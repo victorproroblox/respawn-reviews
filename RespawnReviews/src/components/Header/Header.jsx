@@ -39,12 +39,16 @@ export const Header = () => {
           <span>Respawn Reviews</span>
         </Link>
 
-        <SearchBar />
+        {/* Antes el buscador no tenía este contenedor y por eso nunca se ocultaba en móvil,
+            causando desbordamiento horizontal en toda la página */}
+        <div className={styles.searchBar}>
+          <SearchBar />
+        </div>
 
         {/* MENÚ DE ESCRITORIO */}
         <nav className={styles.nav}>
           {/* Contenedor del Menú Desplegable */}
-          <div 
+          <div
             className={styles.dropdownContainer}
             onMouseEnter={() => setIsDropdownOpen(true)}
             onMouseLeave={() => setIsDropdownOpen(false)}
@@ -52,14 +56,14 @@ export const Header = () => {
             <button className={styles.dropdownBtn}>
               Explorar <ChevronDown size={16} className={styles.chevron} />
             </button>
-            
+
             {/* Lista Desplegable que aparece al pasar el mouse */}
             {isDropdownOpen && (
               <div className={styles.dropdownMenu}>
                 {navLinks.map((link, index) => (
-                  <Link 
-                    key={index} 
-                    to={link.path} 
+                  <Link
+                    key={index}
+                    to={link.path}
                     className={styles.dropdownItem}
                     onClick={() => setIsDropdownOpen(false)}
                   >
@@ -99,9 +103,10 @@ export const Header = () => {
         </div>
 
         {/* BOTÓN HAMBURGUESA PARA MÓVILES */}
-        <button 
+        <button
           className={styles.mobileMenuBtn}
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
         >
           {/* Cambia el ícono dependiendo de si está abierto o cerrado */}
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -111,10 +116,15 @@ export const Header = () => {
       {/* MENÚ DESPLEGABLE PARA MÓVILES */}
       {isMobileMenuOpen && (
         <div className={styles.mobileDropdown}>
+          {/* El buscador vive aquí en móvil, ya que se oculta de la barra superior */}
+          <div className={styles.mobileSearch}>
+            <SearchBar />
+          </div>
+
           {navLinks.map((link, index) => (
-            <Link 
-              key={index} 
-              to={link.path} 
+            <Link
+              key={index}
+              to={link.path}
               className={styles.mobileLink}
               onClick={() => setIsMobileMenuOpen(false)} // Cierra el menú al hacer clic
             >

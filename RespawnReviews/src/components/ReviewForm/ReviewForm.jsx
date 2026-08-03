@@ -50,7 +50,7 @@ export const ReviewForm = ({ existingReview, onSubmit }) => {
 
       <div className={styles.ratingRow}>
         <span className={styles.label}>Tu calificación</span>
-        <StarRating value={puntuacion} onChange={setPuntuacion} size={26} />
+        <StarRating value={puntuacion} onChange={setPuntuacion} size={32} />
       </div>
 
       <textarea

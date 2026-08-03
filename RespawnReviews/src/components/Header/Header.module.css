@@ -28,13 +28,18 @@
 
 .searchBar {
   flex: 1;
+  min-width: 0;
   max-width: 400px;
   position: relative;
   display: none;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .searchBar { display: block; }
+}
+
+.mobileSearch {
+  margin-bottom: 0.5rem;
 }
 
 .searchIcon {
@@ -91,20 +96,8 @@
   white-space: nowrap;
 }
 
-@media (min-width: 768px) {
-  .auth { display: flex; }
-}
-
-.mobileMenu {
-  display: block;
-  background: none;
-  border: none;
-  color: var(--text-primary);
-  cursor: pointer;
-}
-
 @media (min-width: 1024px) {
-  .mobileMenu { display: none; }
+  .auth { display: flex; }
 }
 
 
@@ -175,7 +168,12 @@
   border: none;
   color: var(--text-primary);
   cursor: pointer;
-  display: none; 
+  padding: 0.4rem;
+  display: flex;
+}
+
+@media (min-width: 1024px) {
+  .mobileMenuBtn { display: none; }
 }
 
 .mobileDropdown {
@@ -215,12 +213,9 @@
   border-top: 1px solid var(--bg-hover);
 }
 
-@media (max-width: 768px) {
-  .nav, .auth {
-    display: none;
-  }
-  .mobileMenuBtn {
-    display: block;
+@media (max-width: 400px) {
+  .logo {
+    font-size: 1.15rem;
   }
 }
 

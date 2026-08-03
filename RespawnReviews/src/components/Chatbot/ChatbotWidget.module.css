@@ -1,8 +1,15 @@
 .chatbotContainer {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
+  bottom: 1.25rem;
+  right: 1.25rem;
   z-index: 1000;
+  /* El contenedor en sí no debe bloquear clics; solo el botón/ventana (hijos) los reciben.
+     Evita que la esquina cuadrada e invisible del wrapper tape botones cercanos en pantallas cortas */
+  pointer-events: none;
+}
+
+.chatbotContainer > * {
+  pointer-events: auto;
 }
 
 .floatingButton {
@@ -10,14 +17,29 @@
   color: white;
   border: none;
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
+  /* clip-path (no solo border-radius) recorta también el área de clic: las esquinas
+     "invisibles" del cuadrado dejan de capturar toques, para no tapar botones cercanos */
+  clip-path: circle(50%);
+  width: 52px;
+  height: 52px;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  .chatbotContainer {
+    bottom: 2rem;
+    right: 2rem;
+  }
+  .floatingButton {
+    width: 60px;
+    height: 60px;
+  }
 }
 
 .floatingButton:hover {
@@ -25,8 +47,10 @@
 }
 
 .chatWindow {
-  width: 320px;
-  height: 400px;
+  /* Nunca más ancho que el viewport menos margen: evita que se salga de pantalla en celulares angostos */
+  width: min(320px, calc(100vw - 2.5rem));
+  height: min(400px, 70vh);
+  margin-bottom: 0.75rem;
   background: var(--bg-secondary);
   border-radius: var(--radius-lg);
   box-shadow: 0 10px 25px rgba(0,0,0,0.5);

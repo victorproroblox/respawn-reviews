@@ -2,7 +2,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1rem;
+  padding: 2rem 1rem 5rem;
+}
+
+@media (min-width: 768px) {
+  .loginContainer {
+    padding: 3rem 1rem;
+  }
 }
 
 .loginCard {
@@ -185,10 +191,19 @@
 
 .formOptions {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.75rem;
   font-size: 0.9rem;
   margin-top: 0.25rem;
+}
+
+@media (min-width: 480px) {
+  .formOptions {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .rememberMe {
