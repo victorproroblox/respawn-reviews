@@ -187,38 +187,100 @@
   font-weight: bold;
 }
 
-/* PESTAÑAS (Tabs) */
-.tabsNav {
+/* CALIFICACIONES Y RESEÑAS */
+.reviewsSection {
   display: flex;
-  justify-content: center;
-  gap: 2rem;
-  border-bottom: 1px solid var(--bg-hover);
-  margin-top: 1rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  scroll-margin-top: 100px;
 }
 
-.tab, .tabActive {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 1rem 0;
-  cursor: pointer;
-  position: relative;
+.reviewsHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 1.5rem;
 }
 
-.tabActive {
+@media (min-width: 640px) {
+  .reviewsHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.titleWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.titleWithIcon h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
-.tabActive::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--text-primary);
+.averageBox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.averageValue {
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.averageCount {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.loginPrompt {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.loginPrompt a {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.loginPrompt a:hover {
+  text-decoration: underline;
+}
+
+.reviewsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.emptyReviews {
+  text-align: center;
+  padding: 2.5rem 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+.errorText {
+  color: #ef4444;
+}
+
+.loadingReviews {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+  color: var(--accent-cyan);
 }
 
 @keyframes spin { 100% { transform: rotate(360deg); } }

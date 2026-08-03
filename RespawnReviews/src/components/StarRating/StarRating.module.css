@@ -1,0 +1,60 @@
+.row {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.starSlot {
+  position: relative;
+  display: inline-block;
+}
+
+.starBase {
+  position: absolute;
+  inset: 0;
+  color: var(--bg-hover);
+}
+
+.starFillClip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.starFill {
+  color: #facc15;
+}
+
+.hitLeft,
+.hitRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.hitLeft {
+  left: 0;
+}
+
+.hitRight {
+  right: 0;
+}
+
+.readOnly .starSlot {
+  cursor: default;
+}
+
+.valueLabel {
+  margin-left: 0.4rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}

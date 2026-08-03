@@ -7,6 +7,7 @@ const cors = require('cors');
 const multer = require('multer');
 const authRoutes = require('./routes/authRoutes');
 const publicacionesRoutes = require('./routes/publicacionesRoutes');
+const calificacionesRoutes = require('./routes/calificacionesRoutes');
 
 // 2. Inicializar Express
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json()); // Permite recibir datos en formato JSON
 // 4. Montar Rutas
 app.use('/api/auth', authRoutes);
 app.use('/api/publicaciones', publicacionesRoutes);
+app.use('/api/calificaciones', calificacionesRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
