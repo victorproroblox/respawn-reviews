@@ -24,13 +24,13 @@ export const TopJuegosChart = () => {
         const topJuegos = data.topJuegos || [];
 
         // La imagen no vive en la tabla de calificaciones, así que la pedimos aparte por
-        // juego (pocas llamadas, y el backend ya cachea las respuestas de TheGamesDB).
-        const conImagen = await Promise.all(
-          topJuegos.map(async (juego) => {
-            const detalle = await getGameDetails(juego.juego_api_id);
-            return { ...juego, imagen: detalle?.background_image || null };
-          })
-        );
+        // juego. El backend ya cachea estas respuestas, pero una sola por una (no en
+        // paralelo) evita mandarle una ráfaga de golpe a la API de TheGamesDB.
+        const conImagen = [];
+        for (const juego of topJuegos) {
+          const detalle = await getGameDetails(juego.juego_api_id);
+          conImagen.push({ ...juego, imagen: detalle?.background_image || null });
+        }
 
         if (!cancelado) setJuegos(conImagen);
       } catch (err) {
