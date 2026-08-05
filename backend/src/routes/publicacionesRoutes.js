@@ -4,6 +4,7 @@ const router = express.Router();
 const {
     crearPublicacion,
     listarPublicaciones,
+    listarPublicacionesPorJuego,
     editarPublicacion,
     eliminarPublicacion
 } = require('../controllers/publicacionesController');
@@ -12,6 +13,9 @@ const upload = require('../middlewares/uploadMiddleware');
 
 // Pública: usuarios con o sin sesión pueden ver el feed
 router.get('/', listarPublicaciones);
+
+// Pública: publicaciones de un juego específico (se usa en la ficha del juego)
+router.get('/juego/:juegoApiId', listarPublicacionesPorJuego);
 
 // Privadas: requieren sesión iniciada
 router.post('/', verificarToken, upload.single('archivo'), crearPublicacion);

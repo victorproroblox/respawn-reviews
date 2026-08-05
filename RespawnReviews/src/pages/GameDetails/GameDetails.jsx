@@ -5,11 +5,13 @@ import { getGameDetails } from '../../services/gamesDbApi';
 // import { getGameDetails } from '../../services/rawgApi';
 import { fetchCalificacionesPorJuego, guardarCalificacion } from '../../services/calificacionesApi';
 import { useAuth } from '../../context/AuthContext';
+import { usePosts } from '../../hooks/usePosts';
 import { Button } from '../../components/Button/Button';
 import { StarRating } from '../../components/StarRating/StarRating';
 import { ReviewForm } from '../../components/ReviewForm/ReviewForm';
 import { ReviewCard } from '../../components/ReviewCard/ReviewCard';
-import { ArrowLeft, Star, Edit3, BookmarkPlus, Loader2, MessageSquare } from 'lucide-react';
+import { PostCard } from '../../components/PostCard/PostCard';
+import { ArrowLeft, Star, Edit3, BookmarkPlus, Loader2, MessageSquare, Camera } from 'lucide-react';
 import styles from './GameDetails.module.css';
 
 export const GameDetails = () => {
@@ -52,6 +54,14 @@ export const GameDetails = () => {
   useEffect(() => {
     cargarCalificaciones();
   }, [cargarCalificaciones]);
+
+  const {
+    posts: publicacionesDelJuego,
+    loading: loadingPublicaciones,
+    error: errorPublicaciones,
+    editar: editarPublicacion,
+    eliminar: eliminarPublicacion,
+  } = usePosts({ juegoApiId: id });
 
   const miCalificacion = isAuthenticated
     ? calificaciones.find((c) => c.usuario_id === user.id)
@@ -204,6 +214,45 @@ export const GameDetails = () => {
           <div className={styles.reviewsList}>
             {calificaciones.map((review) => (
               <ReviewCard key={review.id} review={review} isOwn={isAuthenticated && review.usuario_id === user.id} />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Publicaciones de la Comunidad sobre este juego */}
+      <div className={styles.reviewsSection}>
+        <div className={styles.reviewsHeader}>
+          <div className={styles.titleWithIcon}>
+            <Camera size={22} color="var(--accent-cyan)" />
+            <h2>Publicaciones de la Comunidad</h2>
+          </div>
+          <Link to="/community">
+            <Button variant="outline">Publicar en Comunidad</Button>
+          </Link>
+        </div>
+
+        {errorPublicaciones ? (
+          <div className={styles.emptyReviews}>
+            <p className={styles.errorText}>{errorPublicaciones}</p>
+          </div>
+        ) : loadingPublicaciones ? (
+          <div className={styles.loadingReviews}>
+            <Loader2 className={styles.spinner} size={32} />
+          </div>
+        ) : publicacionesDelJuego.length === 0 ? (
+          <div className={styles.emptyReviews}>
+            <p>Todavía nadie ha publicado sobre este juego. ¡Comparte algo en la Comunidad!</p>
+          </div>
+        ) : (
+          <div className={styles.reviewsList}>
+            {publicacionesDelJuego.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                isOwner={isAuthenticated && user?.id === post.usuario_id}
+                onEdit={editarPublicacion}
+                onDelete={eliminarPublicacion}
+              />
             ))}
           </div>
         )}

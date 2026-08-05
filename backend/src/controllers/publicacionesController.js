@@ -19,9 +19,12 @@ const crearPublicacion = async (req, res) => {
             return res.status(400).json({ error: 'Debes adjuntar una imagen o un video.' });
         }
 
-        const { descripcion } = req.body;
+        const { descripcion, juegoApiId, juegoNombre, juegoImagen } = req.body;
         if (!descripcion || !descripcion.trim()) {
             return res.status(400).json({ error: 'La publicación necesita una descripción.' });
+        }
+        if (!juegoApiId) {
+            return res.status(400).json({ error: 'Selecciona a qué juego pertenece esta publicación.' });
         }
 
         const tipoContenido = req.file.mimetype.startsWith('video/') ? 'video' : 'imagen';
@@ -41,9 +44,19 @@ const crearPublicacion = async (req, res) => {
             await connection.beginTransaction();
 
             const [resultado] = await connection.execute(
-                `INSERT INTO publicaciones (usuario_id, tipo_contenido, url_contenido, cloudinary_public_id, descripcion)
-                 VALUES (?, ?, ?, ?, ?)`,
-                [req.user.id, tipoContenido, resultadoCloudinary.secure_url, resultadoCloudinary.public_id, descripcion.trim()]
+                `INSERT INTO publicaciones
+                    (usuario_id, juego_api_id, juego_nombre, juego_imagen, tipo_contenido, url_contenido, cloudinary_public_id, descripcion)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    req.user.id,
+                    juegoApiId,
+                    juegoNombre || null,
+                    juegoImagen || null,
+                    tipoContenido,
+                    resultadoCloudinary.secure_url,
+                    resultadoCloudinary.public_id,
+                    descripcion.trim(),
+                ]
             );
 
             await connection.execute('UPDATE usuarios SET puntos = puntos + ? WHERE id = ?', [puntosGanados, req.user.id]);
@@ -58,7 +71,8 @@ const crearPublicacion = async (req, res) => {
 
             const [publicaciones] = await pool.execute(
                 `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,
-                        p.usuario_id, u.nombre AS usuario_nombre
+                        p.usuario_id, u.nombre AS usuario_nombre,
+                        p.juego_api_id, p.juego_nombre, p.juego_imagen
                  FROM publicaciones p
                  JOIN usuarios u ON u.id = p.usuario_id
                  WHERE p.id = ?`,
@@ -91,7 +105,8 @@ const listarPublicaciones = async (req, res) => {
 
         const [publicaciones] = await pool.query(
             `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,
-                    p.usuario_id, u.nombre AS usuario_nombre
+                    p.usuario_id, u.nombre AS usuario_nombre,
+                    p.juego_api_id, p.juego_nombre, p.juego_imagen
              FROM publicaciones p
              JOIN usuarios u ON u.id = p.usuario_id
              ORDER BY p.creado_en DESC
@@ -111,6 +126,30 @@ const listarPublicaciones = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error interno del servidor al obtener las publicaciones.' });
+    }
+};
+
+// --- LISTAR PUBLICACIONES DE UN JUEGO ESPECÍFICO (público; usado en la ficha del juego) ---
+const listarPublicacionesPorJuego = async (req, res) => {
+    try {
+        const { juegoApiId } = req.params;
+
+        const [publicaciones] = await pool.execute(
+            `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,
+                    p.usuario_id, u.nombre AS usuario_nombre,
+                    p.juego_api_id, p.juego_nombre, p.juego_imagen
+             FROM publicaciones p
+             JOIN usuarios u ON u.id = p.usuario_id
+             WHERE p.juego_api_id = ?
+             ORDER BY p.creado_en DESC
+             LIMIT 50`,
+            [juegoApiId]
+        );
+
+        res.json({ publicaciones });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor al obtener las publicaciones del juego.' });
     }
 };
 
@@ -201,4 +240,10 @@ const eliminarPublicacion = async (req, res) => {
     }
 };
 
-module.exports = { crearPublicacion, listarPublicaciones, editarPublicacion, eliminarPublicacion };
+module.exports = {
+    crearPublicacion,
+    listarPublicaciones,
+    listarPublicacionesPorJuego,
+    editarPublicacion,
+    eliminarPublicacion,
+};

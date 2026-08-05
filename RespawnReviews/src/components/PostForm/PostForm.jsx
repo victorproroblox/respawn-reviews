@@ -2,14 +2,18 @@
 import { useRef, useState } from 'react';
 import { ImagePlus, X, AlertCircle } from 'lucide-react';
 import { Button } from '../Button/Button';
+import { GamePicker } from '../GamePicker/GamePicker';
 import styles from './PostForm.module.css';
 
 const MAX_FILE_SIZE_MB = 200;
 
-export const PostForm = ({ onSubmit }) => {
+// juegoFijo: si se pasa (ej. desde la ficha de un juego), la publicación queda ligada a ese
+// juego automáticamente y no se muestra el buscador de juegos.
+export const PostForm = ({ onSubmit, juegoFijo = null }) => {
   const [archivo, setArchivo] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [descripcion, setDescripcion] = useState('');
+  const [juego, setJuego] = useState(juegoFijo);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const fileInputRef = useRef(null);
@@ -47,6 +51,10 @@ export const PostForm = ({ onSubmit }) => {
     e.preventDefault();
     setError(null);
 
+    if (!juego) {
+      setError('Busca y selecciona a qué juego pertenece esta publicación.');
+      return;
+    }
     if (!archivo) {
       setError('Adjunta una imagen o un video para publicar.');
       return;
@@ -57,11 +65,12 @@ export const PostForm = ({ onSubmit }) => {
     }
 
     setLoading(true);
-    const resultado = await onSubmit(archivo, descripcion.trim());
+    const resultado = await onSubmit(archivo, descripcion.trim(), juego);
     setLoading(false);
 
     if (resultado?.ok) {
       setDescripcion('');
+      setJuego(juegoFijo);
       limpiarArchivo();
     } else if (resultado?.error) {
       setError(resultado.error);
@@ -74,6 +83,13 @@ export const PostForm = ({ onSubmit }) => {
         <div className={styles.formError}>
           <AlertCircle size={18} />
           <span>{error}</span>
+        </div>
+      )}
+
+      {!juegoFijo && (
+        <div className={styles.fieldGroup}>
+          <label className={styles.fieldLabel}>¿De qué juego se trata?</label>
+          <GamePicker selected={juego} onSelect={setJuego} />
         </div>
       )}
 

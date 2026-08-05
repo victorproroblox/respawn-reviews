@@ -28,16 +28,14 @@ export const Footer = () => {
         <div className={styles.linksGroup}>
           <h3>Plataforma</h3>
           <Link to="/games">Catálogo de Juegos</Link>
-          <Link to="#">Rankings</Link>
-          <Link to="#">Comunidad</Link>
-          <Link to="#">Últimas Reseñas</Link>
+          <Link to="/community">Comunidad</Link>
         </div>
 
         <div className={styles.linksGroup}>
           <h3>Soporte</h3>
-          <Link to="#">Preguntas Frecuentes</Link>
-          <Link to="#">Términos de Servicio</Link>
-          <Link to="#">Política de Privacidad</Link>
+          <Link to="/faq">Preguntas Frecuentes</Link>
+          <Link to="/terminos">Términos de Servicio</Link>
+          <Link to="/privacidad">Política de Privacidad</Link>
         </div>
 
         <div className={styles.contactGroup}>

@@ -1,71 +1,16 @@
 // src/pages/Community/Community.jsx
-import { useCallback, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Loader2, Users } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { fetchPosts, createPost, updatePost, deletePost } from '../../services/postsApi';
+import { usePosts } from '../../hooks/usePosts';
 import { PostForm } from '../../components/PostForm/PostForm';
 import { PostCard } from '../../components/PostCard/PostCard';
 import { Button } from '../../components/Button/Button';
 import styles from './Community.module.css';
 
 export const Community = () => {
-  const { isAuthenticated, user, token } = useAuth();
-
-  const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [totalPaginas, setTotalPaginas] = useState(1);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  const cargarPagina = useCallback(async (paginaSolicitada) => {
-    setLoading(true);
-    setError(null);
-    try {
-      const data = await fetchPosts(paginaSolicitada, 10);
-      setPosts((prev) => (paginaSolicitada === 1 ? data.publicaciones : [...prev, ...data.publicaciones]));
-      setTotalPaginas(data.totalPaginas);
-      setPage(paginaSolicitada);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    cargarPagina(1);
-  }, [cargarPagina]);
-
-  const handleCrear = async (archivo, descripcion) => {
-    try {
-      const data = await createPost(archivo, descripcion, token);
-      setPosts((prev) => [data.publicacion, ...prev]);
-      return { ok: true };
-    } catch (err) {
-      return { ok: false, error: err.message };
-    }
-  };
-
-  const handleEditar = async (id, descripcion) => {
-    try {
-      await updatePost(id, descripcion, token);
-      setPosts((prev) => prev.map((p) => (p.id === id ? { ...p, descripcion } : p)));
-      return true;
-    } catch {
-      return false;
-    }
-  };
-
-  const handleEliminar = async (id) => {
-    if (!window.confirm('¿Seguro que quieres eliminar esta publicación? Esta acción no se puede deshacer.')) return;
-    try {
-      await deletePost(id, token);
-      setPosts((prev) => prev.filter((p) => p.id !== id));
-    } catch (err) {
-      window.alert(err.message);
-    }
-  };
+  const { isAuthenticated, user } = useAuth();
+  const { posts, page, totalPaginas, loading, error, cargarPagina, crear, editar, eliminar } = usePosts();
 
   return (
     <div className={styles.communityContainer}>
@@ -78,7 +23,7 @@ export const Community = () => {
       </header>
 
       {isAuthenticated ? (
-        <PostForm onSubmit={handleCrear} />
+        <PostForm onSubmit={crear} />
       ) : (
         <div className={styles.loginPrompt}>
           <p>
@@ -110,8 +55,8 @@ export const Community = () => {
                 key={post.id}
                 post={post}
                 isOwner={isAuthenticated && user?.id === post.usuario_id}
-                onEdit={handleEditar}
-                onDelete={handleEliminar}
+                onEdit={editar}
+                onDelete={eliminar}
               />
             ))}
           </div>

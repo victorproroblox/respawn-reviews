@@ -1,6 +1,7 @@
 // src/components/PostCard/PostCard.jsx
 import { useState } from 'react';
-import { User, Pencil, Trash2, X, Check } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { User, Pencil, Trash2, X, Check, Gamepad2 } from 'lucide-react';
 import { Button } from '../Button/Button';
 import styles from './PostCard.module.css';
 
@@ -40,6 +41,17 @@ export const PostCard = ({ post, isOwner, onEdit, onDelete }) => {
       </div>
 
       <div className={styles.content}>
+        {post.juego_api_id && (
+          <Link to={`/game/${post.juego_api_id}`} className={styles.gameBadge}>
+            {post.juego_imagen ? (
+              <img src={post.juego_imagen} alt={post.juego_nombre} className={styles.gameBadgeImage} />
+            ) : (
+              <span className={styles.gameBadgeImageFallback}><Gamepad2 size={14} /></span>
+            )}
+            <span className={styles.gameBadgeName}>{post.juego_nombre || 'Ver juego'}</span>
+          </Link>
+        )}
+
         <div className={styles.header}>
           <div className={styles.author}>
             <span className={styles.avatar}><User size={16} /></span>

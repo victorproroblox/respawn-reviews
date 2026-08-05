@@ -20,11 +20,25 @@ export const fetchPosts = async (page = 1, limit = 10) => {
   return parseErrorOrJson(response);
 };
 
-// archivo: File (imagen o video), descripcion: string, token: JWT del usuario autenticado
-export const createPost = async (archivo, descripcion, token) => {
+// Publicaciones de un juego específico (se usa en la ficha del juego)
+export const fetchPostsByGame = async (juegoApiId) => {
+  let response;
+  try {
+    response = await fetch(`${API_URL}/publicaciones/juego/${juegoApiId}`);
+  } catch {
+    throw new Error('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
+  }
+  return parseErrorOrJson(response);
+};
+
+// archivo: File (imagen o video), descripcion: string, juego: { id, title, image }, token: JWT
+export const createPost = async (archivo, descripcion, juego, token) => {
   const formData = new FormData();
   formData.append('archivo', archivo);
   formData.append('descripcion', descripcion);
+  formData.append('juegoApiId', juego.id);
+  if (juego.title) formData.append('juegoNombre', juego.title);
+  if (juego.image) formData.append('juegoImagen', juego.image);
 
   let response;
   try {

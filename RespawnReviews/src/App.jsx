@@ -10,6 +10,9 @@ import { Register } from './pages/Register/Register';
 import { Panel } from './pages/Panel/Panel';
 import { GameDetails } from './pages/GameDetails/GameDetails';
 import { Community } from './pages/Community/Community';
+import { Faq } from './pages/Faq/Faq';
+import { Terms } from './pages/Terms/Terms';
+import { Privacy } from './pages/Privacy/Privacy';
 
 function App() {
   return (
@@ -23,6 +26,9 @@ function App() {
             <Route path="/community" element={<Community />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/faq" element={<Faq />} />
+            <Route path="/terminos" element={<Terms />} />
+            <Route path="/privacidad" element={<Privacy />} />
 
             {/* Ruta protegida: solo Administrador y Editor, redirige a /login si no hay sesión */}
             <Route

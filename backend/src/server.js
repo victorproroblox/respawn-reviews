@@ -9,6 +9,8 @@ const authRoutes = require('./routes/authRoutes');
 const publicacionesRoutes = require('./routes/publicacionesRoutes');
 const calificacionesRoutes = require('./routes/calificacionesRoutes');
 const gamesRoutes = require('./routes/gamesRoutes');
+const estadisticasRoutes = require('./routes/estadisticasRoutes');
+const contactoRoutes = require('./routes/contactoRoutes');
 
 // 2. Inicializar Express
 const app = express();
@@ -22,6 +24,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/publicaciones', publicacionesRoutes);
 app.use('/api/calificaciones', calificacionesRoutes);
 app.use('/api/games', gamesRoutes);
+app.use('/api/estadisticas', estadisticasRoutes);
+app.use('/api/contacto', contactoRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {

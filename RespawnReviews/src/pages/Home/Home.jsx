@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import { useGames } from '../../hooks/useGames';
 import { GameCard } from '../../components/GameCard/GameCard';
 import { Button } from '../../components/Button/Button';
-import { Loader2, Zap, Flame, Trophy, Swords, Crosshair, Award } from 'lucide-react'; // Importamos Award
+import { CommunityStats } from '../../components/CommunityStats/CommunityStats';
+import { ContactForm } from '../../components/ContactForm/ContactForm';
+import { Loader2, Zap, Flame, Trophy, Swords, Crosshair, Award, BarChart3, Mail } from 'lucide-react';
 import styles from './Home.module.css';
 
 export const Home = () => {
@@ -76,7 +78,9 @@ export const Home = () => {
                 <Link to="/games">
                   <Button>Explorar Catálogo</Button>
                 </Link>
-                <Button variant="outline">Unirse ahora</Button>
+                <Link to="/register">
+                  <Button variant="outline">Unirse ahora</Button>
+                </Link>
               </div>
             </>
           )}
@@ -166,11 +170,35 @@ export const Home = () => {
         </>
       )}
 
+      {/* Estadísticas de la Comunidad */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div className={styles.titleWithIcon}>
+            <BarChart3 color="var(--accent-cyan)" />
+            <h2>Estadísticas de la Comunidad</h2>
+          </div>
+        </div>
+        <CommunityStats />
+      </section>
+
       {/* Call to Action Final */}
       <section className={styles.ctaSection}>
         <h2>¿Listo para compartir tu opinión?</h2>
         <p>Crea tu perfil gratis, guarda tus juegos favoritos y empieza a escribir reseñas hoy mismo.</p>
-        <Button>Crear mi cuenta</Button>
+        <Link to="/register">
+          <Button>Crear mi cuenta</Button>
+        </Link>
+      </section>
+
+      {/* Formulario de Contacto */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div className={styles.titleWithIcon}>
+            <Mail color="var(--accent-purple)" />
+            <h2>¿Tienes dudas? Contáctanos</h2>
+          </div>
+        </div>
+        <ContactForm />
       </section>
     </div>
   );
