@@ -1,7 +1,9 @@
 // src/controllers/authController.js
+const fs = require('fs/promises');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
+const cloudinary = require('../config/cloudinary');
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -91,7 +93,15 @@ const loginUsuario = async (req, res) => {
             { expiresIn: '2h' } // La sesión dura 2 horas
         );
 
-        res.json({ message: 'Bienvenido a Respawn Reviews', token, id: user.id, rol, nombre: user.nombre });
+        res.json({
+            message: 'Bienvenido a Respawn Reviews',
+            token,
+            id: user.id,
+            rol,
+            nombre: user.nombre,
+            avatarUrl: user.avatar_url,
+            puntos: user.puntos,
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error interno del servidor.' });
@@ -102,7 +112,7 @@ const loginUsuario = async (req, res) => {
 const obtenerPerfil = async (req, res) => {
     try {
         const [users] = await pool.execute(
-            'SELECT id, nombre, email, creado_en FROM usuarios WHERE id = ?',
+            'SELECT id, nombre, email, creado_en, puntos, avatar_url AS avatarUrl FROM usuarios WHERE id = ?',
             [req.user.id]
         );
         if (users.length === 0) {
@@ -116,4 +126,44 @@ const obtenerPerfil = async (req, res) => {
     }
 };
 
-module.exports = { registrarUsuario, loginUsuario, obtenerPerfil };
+// --- SUBIR / CAMBIAR FOTO DE PERFIL ---
+const actualizarAvatar = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ error: 'Adjunta una imagen para tu foto de perfil.' });
+        }
+
+        const [users] = await pool.execute('SELECT avatar_public_id FROM usuarios WHERE id = ?', [req.user.id]);
+        const avatarAnteriorId = users[0]?.avatar_public_id;
+
+        let resultadoCloudinary;
+        try {
+            resultadoCloudinary = await cloudinary.uploader.upload(req.file.path, {
+                resource_type: 'image',
+                folder: 'respawn-reviews/avatars',
+            });
+        } finally {
+            await fs.unlink(req.file.path).catch(() => {});
+        }
+
+        await pool.execute(
+            'UPDATE usuarios SET avatar_url = ?, avatar_public_id = ? WHERE id = ?',
+            [resultadoCloudinary.secure_url, resultadoCloudinary.public_id, req.user.id]
+        );
+
+        // Borramos la foto anterior de Cloudinary después de guardar la nueva, para no dejar
+        // al usuario sin avatar si esto llega a fallar
+        if (avatarAnteriorId) {
+            await cloudinary.uploader.destroy(avatarAnteriorId, { resource_type: 'image' }).catch((err) => {
+                console.error('No se pudo eliminar el avatar anterior de Cloudinary:', err);
+            });
+        }
+
+        res.json({ message: 'Foto de perfil actualizada.', avatarUrl: resultadoCloudinary.secure_url });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor al actualizar tu foto de perfil.' });
+    }
+};
+
+module.exports = { registrarUsuario, loginUsuario, obtenerPerfil, actualizarAvatar };

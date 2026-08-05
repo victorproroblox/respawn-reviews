@@ -31,6 +31,19 @@ export const fetchPostsByGame = async (juegoApiId) => {
   return parseErrorOrJson(response);
 };
 
+// Publicaciones del usuario autenticado (se usa en "Mi Perfil")
+export const fetchMisPublicaciones = async (token) => {
+  let response;
+  try {
+    response = await fetch(`${API_URL}/publicaciones/usuario/mias`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch {
+    throw new Error('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
+  }
+  return parseErrorOrJson(response);
+};
+
 // archivo: File (imagen o video), descripcion: string, juego: { id, title, image }, token: JWT
 export const createPost = async (archivo, descripcion, juego, token) => {
   const formData = new FormData();

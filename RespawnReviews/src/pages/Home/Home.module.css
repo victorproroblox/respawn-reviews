@@ -6,8 +6,8 @@
 
 /* Hero Section */
 .hero {
-  text-align: center;
-  padding: 6rem 1rem;
+  text-align: left;
+  padding: 5rem 2rem;
   background: radial-gradient(circle at center, var(--bg-secondary) 0%, var(--bg-primary) 100%);
   border-radius: var(--radius-lg);
   border: 1px solid var(--bg-hover);
@@ -26,17 +26,34 @@
   z-index: 0;
 }
 
+.heroGrid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: 3rem;
+}
+
 .heroContent {
   position: relative;
   z-index: 1;
 }
 
-.heroContent h1 {
-  font-size: clamp(3rem, 6vw, 5rem);
+.title {
+  font-size: clamp(2.6rem, 5vw, 4.2rem);
   font-weight: 800;
   line-height: 1.1;
   margin-bottom: 1.5rem;
   color: var(--text-primary);
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 1.15rem;
+  max-width: 520px;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
 }
 
 .highlight {
@@ -45,18 +62,108 @@
   -webkit-text-fill-color: transparent;
 }
 
-.heroContent p {
-  color: var(--text-secondary);
-  font-size: 1.2rem;
-  max-width: 600px;
-  margin: 0 auto 2.5rem auto;
-  line-height: 1.6;
-}
-
 .heroActions {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 1rem;
+}
+
+/* Panel visual decorativo del hero (sin portadas de juegos) */
+.heroVisual {
+  position: relative;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--bg-hover);
+  background: linear-gradient(145deg, rgba(139, 92, 246, 0.12), rgba(6, 182, 212, 0.08));
+  overflow: hidden;
+}
+
+.heroVisualGlow {
+  position: absolute;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  filter: blur(85px);
+  opacity: 0.4;
+}
+
+.heroVisualIcon {
+  position: relative;
+  color: var(--accent-purple);
+  opacity: 0.85;
+  animation: floatIcon 6s ease-in-out infinite;
+}
+
+@keyframes floatIcon {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-14px); }
+}
+
+.floatingBadge {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--bg-hover);
+  background: var(--bg-secondary);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  animation: floatBadge 5s ease-in-out infinite;
+}
+
+@keyframes floatBadge {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.badgeOne {
+  top: 10%;
+  left: 4%;
+  color: #facc15;
+  animation-delay: 0s;
+}
+
+.badgeTwo {
+  bottom: 18%;
+  right: 4%;
+  color: var(--accent-purple);
+  animation-delay: 1.2s;
+}
+
+.badgeThree {
+  bottom: 8%;
+  left: 16%;
+  color: var(--accent-cyan);
+  animation-delay: 2.4s;
+}
+
+@media (max-width: 860px) {
+  .heroGrid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .heroVisual {
+    display: none;
+  }
+
+  .heroActions {
+    justify-content: center;
+  }
+
+  .subtitle {
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 
 /* Secciones Generales */
@@ -86,54 +193,127 @@
   gap: 1.5rem;
 }
 
-/* Categorías */
-.categoriesGrid {
+.section {
+  width: 100%;
+}
+
+/* Vitrina "Todo lo que puedes hacer aquí" (reemplaza Explorar por Categoría) */
+.spotlightGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
 }
 
-@media (min-width: 640px) {
-  .categoriesGrid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1.5rem;
-  }
-}
-
-.categoryCard {
-  background: var(--bg-secondary);
-  border: 1px solid var(--bg-hover);
-  border-radius: var(--radius-lg);
-  padding: 1.25rem 1rem;
-  text-align: center;
-  transition: var(--transition);
-  cursor: pointer;
+.spotlightCard {
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 0.75rem;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--bg-hover);
+  background: var(--bg-secondary);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: var(--transition);
 }
 
-@media (min-width: 640px) {
-  .categoryCard {
-    padding: 2rem;
-    gap: 1rem;
-  }
+.spotlightCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
 }
 
-.categoryCard:hover {
-  transform: translateY(-5px);
-  border-color: var(--accent-purple);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+.spotlightCard h3 {
+  font-size: 1.3rem;
+  font-weight: 700;
 }
 
-.iconWrapper {
-  background: var(--bg-primary);
-  padding: 1rem;
-  border-radius: 50%;
-  display: flex;
+.spotlightCard p {
+  flex: 1;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.spotlightIcon {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+}
+
+.spotlightCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.cardPurple .spotlightIcon,
+.cardPurple .spotlightCta {
+  color: var(--accent-purple);
+}
+
+.cardPurple:hover {
+  border-color: var(--accent-purple);
+}
+
+.cardGold .spotlightIcon,
+.cardGold .spotlightCta {
+  color: #facc15;
+}
+
+.cardGold:hover {
+  border-color: #facc15;
+}
+
+.cardCyan .spotlightIcon,
+.cardCyan .spotlightCta {
+  color: var(--accent-cyan);
+}
+
+.cardCyan:hover {
+  border-color: var(--accent-cyan);
+}
+
+/* Banner de Rankings (reemplaza el widget de estadísticas que fallaba) */
+.rankingsBanner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 2.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.08), rgba(139, 92, 246, 0.08));
+}
+
+.rankingsBannerText {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  max-width: 600px;
+}
+
+.rankingsBannerText h2 {
+  margin-bottom: 0.4rem;
+  font-size: 1.6rem;
+}
+
+.rankingsBannerText p {
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .rankingsBanner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* Call to Action Final */

@@ -4,6 +4,7 @@ import { Gamepad2, Menu, X, ChevronDown, LogOut, ShieldCheck } from 'lucide-reac
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../Button/Button';
 import { SearchBar } from '../SearchBar/SearchBar';
+import { Avatar } from '../Avatar/Avatar';
 import { useAuth } from '../../context/AuthContext';
 import styles from './Header.module.css';
 
@@ -85,9 +86,12 @@ export const Header = () => {
                   </Button>
                 </Link>
               )}
-              <span className={styles.userGreeting}>Hola, {user.nombre}</span>
-              <Button onClick={handleLogout}>
-                <LogOut size={16} /> Salir
+              <Link to="/perfil" className={styles.profileLink} title={user.nombre}>
+                <Avatar src={user.avatarUrl} alt={user.nombre} size={32} />
+                <span className={styles.userGreeting}>Mi Perfil</span>
+              </Link>
+              <Button onClick={handleLogout} aria-label="Cerrar sesión">
+                <LogOut size={16} />
               </Button>
             </>
           ) : (
@@ -134,12 +138,18 @@ export const Header = () => {
           <div className={styles.mobileAuth}>
             {isAuthenticated ? (
               <>
+                <Link to="/perfil" className={styles.mobileProfileLink} onClick={() => setIsMobileMenuOpen(false)}>
+                  <Avatar src={user.avatarUrl} alt={user.nombre} size={36} />
+                  <span>Mi Perfil ({user.nombre})</span>
+                </Link>
                 {puedeVerPanel && (
                   <Link to="/panel" onClick={() => setIsMobileMenuOpen(false)}>
                     <Button variant="outline" style={{ width: '100%' }}>Panel</Button>
                   </Link>
                 )}
-                <Button style={{ width: '100%' }} onClick={handleLogout}>Salir ({user.nombre})</Button>
+                <Button style={{ width: '100%' }} onClick={handleLogout}>
+                  <LogOut size={16} /> Salir
+                </Button>
               </>
             ) : (
               <>

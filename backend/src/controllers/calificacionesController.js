@@ -44,7 +44,7 @@ const guardarCalificacion = async (req, res) => {
 
             const [actualizada] = await pool.execute(
                 `SELECT c.id, c.juego_api_id, c.juego_nombre, c.puntuacion, c.comentario, c.creado_en, c.actualizado_en,
-                        c.usuario_id, u.nombre AS usuario_nombre
+                        c.usuario_id, u.nombre AS usuario_nombre, u.avatar_url AS usuario_avatar_url
                  FROM calificaciones c
                  JOIN usuarios u ON u.id = c.usuario_id
                  WHERE c.id = ?`,
@@ -84,7 +84,7 @@ const guardarCalificacion = async (req, res) => {
 
             const [creada] = await pool.execute(
                 `SELECT c.id, c.juego_api_id, c.juego_nombre, c.puntuacion, c.comentario, c.creado_en, c.actualizado_en,
-                        c.usuario_id, u.nombre AS usuario_nombre
+                        c.usuario_id, u.nombre AS usuario_nombre, u.avatar_url AS usuario_avatar_url
                  FROM calificaciones c
                  JOIN usuarios u ON u.id = c.usuario_id
                  WHERE c.id = ?`,
@@ -120,7 +120,7 @@ const listarCalificacionesPorJuego = async (req, res) => {
 
         const [calificaciones] = await pool.execute(
             `SELECT c.id, c.juego_api_id, c.puntuacion, c.comentario, c.creado_en, c.actualizado_en,
-                    c.usuario_id, u.nombre AS usuario_nombre
+                    c.usuario_id, u.nombre AS usuario_nombre, u.avatar_url AS usuario_avatar_url
              FROM calificaciones c
              JOIN usuarios u ON u.id = c.usuario_id
              WHERE c.juego_api_id = ?

@@ -1,0 +1,275 @@
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.headerCard {
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.avatarWrapper {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.avatarEditBtn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--gradient-primary);
+  color: white;
+  border: 3px solid var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.avatarEditBtn:hover {
+  transform: scale(1.08);
+}
+
+.avatarEditBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.info {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.nameRow h1 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.rolBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(139, 92, 246, 0.15);
+  color: var(--accent-purple);
+  padding: 0.25rem 0.65rem;
+  border-radius: 20px;
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.85rem;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.metaRow span {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.pointsBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.5rem;
+  color: #facc15;
+  flex-shrink: 0;
+}
+
+.pointsValue {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.pointsLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--bg-hover);
+  padding-bottom: 0.75rem;
+}
+
+.emptyText {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.emptyText a {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.emptyText a:hover {
+  text-decoration: underline;
+}
+
+.loadingState {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+  color: var(--accent-cyan);
+}
+
+.ratingsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.ratingItem {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  transition: var(--transition);
+}
+
+.ratingItem:hover {
+  border-color: var(--accent-cyan);
+}
+
+.ratingGameName {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ratingComment {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Publicaciones "en chiquito" */
+.postsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.75rem;
+}
+
+.postThumb {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.postThumbMedia {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.postThumbGame {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.85), transparent);
+  color: white;
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.4rem 0.4rem 0.3rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 640px) {
+  .ratingItem {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerCard {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .metaRow {
+    justify-content: center;
+  }
+
+  .ratingItem {
+    flex-wrap: wrap;
+  }
+
+  .ratingComment {
+    white-space: normal;
+    width: 100%;
+  }
+}

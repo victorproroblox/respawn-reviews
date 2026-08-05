@@ -83,18 +83,6 @@
   gap: 0.6rem;
 }
 
-.avatar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: var(--bg-primary);
-  color: var(--accent-cyan);
-  flex-shrink: 0;
-}
-
 .authorName {
   display: block;
   color: var(--text-primary);

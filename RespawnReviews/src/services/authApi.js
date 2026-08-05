@@ -43,3 +43,26 @@ export const panelControlRequest = (token) =>
   request('/auth/panel-control', {
     headers: { Authorization: `Bearer ${token}` },
   });
+
+// archivo: File (imagen), token: JWT del usuario autenticado
+export const updateAvatarRequest = async (archivo, token) => {
+  const formData = new FormData();
+  formData.append('avatar', archivo);
+
+  let response;
+  try {
+    response = await fetch(`${API_URL}/auth/avatar`, {
+      method: 'PUT',
+      headers: { Authorization: `Bearer ${token}` }, // sin Content-Type: el navegador arma el boundary multipart
+      body: formData,
+    });
+  } catch {
+    throw new Error('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
+  }
+
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) {
+    throw new Error(data.error || 'No se pudo actualizar tu foto de perfil.');
+  }
+  return data;
+};

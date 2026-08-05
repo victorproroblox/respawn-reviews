@@ -71,7 +71,7 @@ const crearPublicacion = async (req, res) => {
 
             const [publicaciones] = await pool.execute(
                 `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,
-                        p.usuario_id, u.nombre AS usuario_nombre,
+                        p.usuario_id, u.nombre AS usuario_nombre, u.avatar_url AS usuario_avatar_url,
                         p.juego_api_id, p.juego_nombre, p.juego_imagen
                  FROM publicaciones p
                  JOIN usuarios u ON u.id = p.usuario_id
@@ -105,7 +105,7 @@ const listarPublicaciones = async (req, res) => {
 
         const [publicaciones] = await pool.query(
             `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,
-                    p.usuario_id, u.nombre AS usuario_nombre,
+                    p.usuario_id, u.nombre AS usuario_nombre, u.avatar_url AS usuario_avatar_url,
                     p.juego_api_id, p.juego_nombre, p.juego_imagen
              FROM publicaciones p
              JOIN usuarios u ON u.id = p.usuario_id
@@ -136,7 +136,7 @@ const listarPublicacionesPorJuego = async (req, res) => {
 
         const [publicaciones] = await pool.execute(
             `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,
-                    p.usuario_id, u.nombre AS usuario_nombre,
+                    p.usuario_id, u.nombre AS usuario_nombre, u.avatar_url AS usuario_avatar_url,
                     p.juego_api_id, p.juego_nombre, p.juego_imagen
              FROM publicaciones p
              JOIN usuarios u ON u.id = p.usuario_id
@@ -150,6 +150,24 @@ const listarPublicacionesPorJuego = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error interno del servidor al obtener las publicaciones del juego.' });
+    }
+};
+
+// --- LISTAR MIS PUBLICACIONES (privado; usado en "Mi Perfil") ---
+const listarMisPublicaciones = async (req, res) => {
+    try {
+        const [publicaciones] = await pool.execute(
+            `SELECT id, tipo_contenido, url_contenido, descripcion, creado_en, actualizado_en,
+                    juego_api_id, juego_nombre, juego_imagen
+             FROM publicaciones
+             WHERE usuario_id = ?
+             ORDER BY creado_en DESC`,
+            [req.user.id]
+        );
+        res.json({ publicaciones });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor al obtener tus publicaciones.' });
     }
 };
 
@@ -244,6 +262,7 @@ module.exports = {
     crearPublicacion,
     listarPublicaciones,
     listarPublicacionesPorJuego,
+    listarMisPublicaciones,
     editarPublicacion,
     eliminarPublicacion,
 };

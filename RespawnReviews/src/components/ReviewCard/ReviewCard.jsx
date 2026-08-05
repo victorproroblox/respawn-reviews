@@ -1,6 +1,6 @@
 // src/components/ReviewCard/ReviewCard.jsx
-import { User } from 'lucide-react';
 import { StarRating } from '../StarRating/StarRating';
+import { Avatar } from '../Avatar/Avatar';
 import styles from './ReviewCard.module.css';
 
 const formatearFecha = (fechaIso) =>
@@ -14,7 +14,7 @@ export const ReviewCard = ({ review, isOwn }) => {
   return (
     <article className={styles.card}>
       <div className={styles.header}>
-        <span className={styles.avatar}><User size={16} /></span>
+        <Avatar src={review.usuario_avatar_url} alt={review.usuario_nombre} size={32} />
         <div className={styles.headerInfo}>
           <div className={styles.nameRow}>
             <span className={styles.authorName}>{review.usuario_nombre}</span>

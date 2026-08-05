@@ -1,6 +1,6 @@
 // src/context/AuthContext.jsx
 import { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { registerRequest, loginRequest } from '../services/authApi';
+import { registerRequest, loginRequest, updateAvatarRequest } from '../services/authApi';
 
 const AuthContext = createContext(null);
 const STORAGE_KEY = 'respawn_session';
@@ -54,7 +54,14 @@ export const AuthProvider = ({ children }) => {
   const persistSession = (data) => {
     const nextSession = {
       token: data.token,
-      user: { id: data.id, nombre: data.nombre, email: data.email, rol: data.rol },
+      user: {
+        id: data.id,
+        nombre: data.nombre,
+        email: data.email,
+        rol: data.rol,
+        avatarUrl: data.avatarUrl ?? null,
+        puntos: data.puntos ?? 0,
+      },
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(nextSession));
     setSession(nextSession);
@@ -93,6 +100,22 @@ export const AuthProvider = ({ children }) => {
     setSession(null);
   };
 
+  // Sube la nueva foto de perfil y actualiza la sesión al toque, para que se vea
+  // reflejada de inmediato en el Header, sin recargar la página
+  const updateAvatar = async (archivo) => {
+    try {
+      const data = await updateAvatarRequest(archivo, session.token);
+      setSession((prev) => {
+        const actualizada = { ...prev, user: { ...prev.user, avatarUrl: data.avatarUrl } };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(actualizada));
+        return actualizada;
+      });
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: err.message };
+    }
+  };
+
   const value = useMemo(
     () => ({
       user: session?.user ?? null,
@@ -104,6 +127,7 @@ export const AuthProvider = ({ children }) => {
       login,
       register,
       logout,
+      updateAvatar,
     }),
     [session, loading, error]
   );

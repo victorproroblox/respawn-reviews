@@ -13,6 +13,8 @@ import { Community } from './pages/Community/Community';
 import { Faq } from './pages/Faq/Faq';
 import { Terms } from './pages/Terms/Terms';
 import { Privacy } from './pages/Privacy/Privacy';
+import { Profile } from './pages/Profile/Profile';
+import { Rankings } from './pages/Rankings/Rankings';
 
 function App() {
   return (
@@ -29,6 +31,17 @@ function App() {
             <Route path="/faq" element={<Faq />} />
             <Route path="/terminos" element={<Terms />} />
             <Route path="/privacidad" element={<Privacy />} />
+            <Route path="/rankings" element={<Rankings />} />
+
+            {/* Ruta protegida: cualquier usuario con sesión iniciada */}
+            <Route
+              path="/perfil"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Ruta protegida: solo Administrador y Editor, redirige a /login si no hay sesión */}
             <Route

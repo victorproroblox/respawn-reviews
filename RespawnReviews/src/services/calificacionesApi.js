@@ -19,6 +19,19 @@ export const fetchCalificacionesPorJuego = async (juegoApiId) => {
   return parseErrorOrJson(response);
 };
 
+// Calificaciones del usuario autenticado (se usa en "Mi Perfil")
+export const fetchMisCalificaciones = async (token) => {
+  let response;
+  try {
+    response = await fetch(`${API_URL}/calificaciones/usuario/mias`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+  } catch {
+    throw new Error('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
+  }
+  return parseErrorOrJson(response);
+};
+
 // Crea o edita (upsert) la calificación del usuario autenticado para ese juego
 export const guardarCalificacion = async (juegoApiId, { puntuacion, comentario, juegoNombre }, token) => {
   let response;

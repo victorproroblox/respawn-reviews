@@ -1,8 +1,9 @@
 // src/components/PostCard/PostCard.jsx
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { User, Pencil, Trash2, X, Check, Gamepad2 } from 'lucide-react';
+import { Pencil, Trash2, X, Check, Gamepad2 } from 'lucide-react';
 import { Button } from '../Button/Button';
+import { Avatar } from '../Avatar/Avatar';
 import styles from './PostCard.module.css';
 
 const formatearFecha = (fechaIso) =>
@@ -54,7 +55,7 @@ export const PostCard = ({ post, isOwner, onEdit, onDelete }) => {
 
         <div className={styles.header}>
           <div className={styles.author}>
-            <span className={styles.avatar}><User size={16} /></span>
+            <Avatar src={post.usuario_avatar_url} alt={post.usuario_nombre} size={34} />
             <div>
               <span className={styles.authorName}>{post.usuario_nombre}</span>
               <span className={styles.date}>{formatearFecha(post.creado_en)}</span>
