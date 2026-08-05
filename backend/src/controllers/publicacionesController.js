@@ -12,10 +12,26 @@ const PUNTOS_POR_TIPO = {
 // Los videos van por upload_large (subida por partes de 6MB): es la forma que recomienda
 // Cloudinary para video porque no depende de mandar el archivo entero en una sola petición,
 // así que es más rápida y no se queda pegada si la conexión tiene algún bache.
+//
+// A diferencia de upload(), upload_large() NO regresa una Promise: su firma real es
+// (path, callback, options) y solo funciona con un callback de un solo argumento (el resultado,
+// o un objeto con .error si algo salió mal). Por eso lo envolvemos a mano en una Promise.
 const subirACloudinary = (filePath, resourceType) => {
     const opciones = { resource_type: resourceType, folder: 'respawn-reviews/publicaciones' };
     if (resourceType === 'video') {
-        return cloudinary.uploader.upload_large(filePath, { ...opciones, chunk_size: 6_000_000 });
+        return new Promise((resolve, reject) => {
+            cloudinary.uploader.upload_large(
+                filePath,
+                (resultado) => {
+                    if (resultado?.error) {
+                        reject(new Error(resultado.error.message || 'Error al subir el video a Cloudinary.'));
+                    } else {
+                        resolve(resultado);
+                    }
+                },
+                { ...opciones, chunk_size: 6_000_000 }
+            );
+        });
     }
     return cloudinary.uploader.upload(filePath, opciones);
 };
@@ -104,32 +120,66 @@ const crearPublicacion = async (req, res) => {
     }
 };
 
-// --- LISTAR PUBLICACIONES (feed público, con paginación) ---
+// PRNG determinista (mulberry32): a partir de una misma semilla siempre da la misma secuencia.
+// Lo usamos para barajar el feed de forma distinta en cada visita, pero manteniendo el MISMO
+// orden mientras el usuario va pidiendo más páginas (si se re-barajara en cada página, "cargar
+// más" repetiría o se saltaría publicaciones).
+const mulberry32 = (semilla) => () => {
+    semilla |= 0;
+    semilla = (semilla + 0x6d2b79f5) | 0;
+    let t = Math.imul(semilla ^ (semilla >>> 15), 1 | semilla);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+
+const barajarConSemilla = (arreglo, semilla) => {
+    const random = mulberry32(semilla);
+    const resultado = [...arreglo];
+    for (let i = resultado.length - 1; i > 0; i--) {
+        const j = Math.floor(random() * (i + 1));
+        [resultado[i], resultado[j]] = [resultado[j], resultado[i]];
+    }
+    return resultado;
+};
+
+// --- LISTAR PUBLICACIONES (feed público, con paginación, en orden aleatorio) ---
 const listarPublicaciones = async (req, res) => {
     try {
         const page = Math.max(parseInt(req.query.page) || 1, 1);
         const limit = Math.min(Math.max(parseInt(req.query.limit) || 10, 1), 50);
-        const offset = (page - 1) * limit;
 
-        const [publicaciones] = await pool.query(
-            `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,
-                    p.usuario_id, u.nombre AS usuario_nombre, u.avatar_url AS usuario_avatar_url,
-                    p.juego_api_id, p.juego_nombre, p.juego_imagen
-             FROM publicaciones p
-             JOIN usuarios u ON u.id = p.usuario_id
-             ORDER BY p.creado_en DESC
-             LIMIT ? OFFSET ?`,
-            [limit, offset]
-        );
+        const seedParam = parseInt(req.query.seed, 10);
+        const seed = Number.isFinite(seedParam) ? seedParam : Math.floor(Math.random() * 2 ** 31);
 
-        const [countResult] = await pool.query('SELECT COUNT(*) AS total FROM publicaciones');
-        const total = countResult[0].total;
+        // Dataset chico (proyecto escolar): barajar en Node es simple y no depende de trucos
+        // de ORDER BY RAND(semilla) en MySQL, que son fáciles de hacer mal.
+        const [idsFilas] = await pool.query('SELECT id FROM publicaciones');
+        const idsBarajados = barajarConSemilla(idsFilas.map((f) => f.id), seed);
+        const total = idsBarajados.length;
+        const idsPagina = idsBarajados.slice((page - 1) * limit, (page - 1) * limit + limit);
+
+        let publicaciones = [];
+        if (idsPagina.length > 0) {
+            const [filas] = await pool.query(
+                `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,
+                        p.usuario_id, u.nombre AS usuario_nombre, u.avatar_url AS usuario_avatar_url,
+                        p.juego_api_id, p.juego_nombre, p.juego_imagen
+                 FROM publicaciones p
+                 JOIN usuarios u ON u.id = p.usuario_id
+                 WHERE p.id IN (?)`,
+                [idsPagina]
+            );
+            // El IN (?) no respeta el orden de la lista, así que reordenamos según idsPagina
+            const porId = new Map(filas.map((f) => [f.id, f]));
+            publicaciones = idsPagina.map((id) => porId.get(id)).filter(Boolean);
+        }
 
         res.json({
             publicaciones,
             page,
-            totalPaginas: Math.ceil(total / limit),
-            total
+            totalPaginas: Math.max(Math.ceil(total / limit), 1),
+            total,
+            seed,
         });
     } catch (error) {
         console.error(error);

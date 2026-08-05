@@ -1,5 +1,5 @@
 // src/hooks/usePosts.js
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { fetchPosts, fetchPostsByGame, createPost, updatePost, deletePost } from '../services/postsApi';
 
@@ -14,6 +14,11 @@ export const usePosts = ({ juegoApiId } = {}) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Un seed nuevo por cada vez que se monta el hook (ej. cada vez que entras a Comunidad), para
+  // que el orden se vea distinto en cada visita. Se reutiliza en "cargar más" para no repetir
+  // ni saltarse publicaciones al paginar sobre el mismo orden barajado.
+  const seedRef = useRef(Math.floor(Math.random() * 1_000_000_000));
+
   const cargarPagina = useCallback(async (paginaSolicitada = 1) => {
     setLoading(true);
     setError(null);
@@ -24,7 +29,7 @@ export const usePosts = ({ juegoApiId } = {}) => {
         setTotalPaginas(1);
         setPage(1);
       } else {
-        const data = await fetchPosts(paginaSolicitada, 10);
+        const data = await fetchPosts(paginaSolicitada, 10, seedRef.current);
         setPosts((prev) => (paginaSolicitada === 1 ? data.publicaciones : [...prev, ...data.publicaciones]));
         setTotalPaginas(data.totalPaginas);
         setPage(paginaSolicitada);

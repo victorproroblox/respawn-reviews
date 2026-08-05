@@ -10,10 +10,13 @@ const parseErrorOrJson = async (response) => {
   return data;
 };
 
-export const fetchPosts = async (page = 1, limit = 10) => {
+// seed: mismo valor entre llamadas para mantener el mismo orden aleatorio mientras se pagina
+// ("cargar más"); un seed distinto (o ausente) hace que el backend genere un orden nuevo.
+export const fetchPosts = async (page = 1, limit = 10, seed = null) => {
+  const seedQuery = seed != null ? `&seed=${seed}` : '';
   let response;
   try {
-    response = await fetch(`${API_URL}/publicaciones?page=${page}&limit=${limit}`);
+    response = await fetch(`${API_URL}/publicaciones?page=${page}&limit=${limit}${seedQuery}`);
   } catch {
     throw new Error('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
   }
