@@ -45,7 +45,12 @@ export const fetchMisPublicaciones = async (token) => {
 };
 
 // archivo: File (imagen o video), descripcion: string, juego: { id, title, image }, token: JWT
-export const createPost = async (archivo, descripcion, juego, token) => {
+// onProgress: (porcentaje 0-100) => void, opcional, para que la UI muestre avance real en vez
+// de un botón "Publicando..." estático que parece trabado en archivos grandes como video.
+//
+// Usamos XMLHttpRequest en vez de fetch porque fetch no expone progreso de subida, y le ponemos
+// un timeout: sin él, si la conexión se cae a medias la promesa nunca se resuelve ni rechaza.
+export const createPost = (archivo, descripcion, juego, token, onProgress) => {
   const formData = new FormData();
   formData.append('archivo', archivo);
   formData.append('descripcion', descripcion);
@@ -53,17 +58,37 @@ export const createPost = async (archivo, descripcion, juego, token) => {
   if (juego.title) formData.append('juegoNombre', juego.title);
   if (juego.image) formData.append('juegoImagen', juego.image);
 
-  let response;
-  try {
-    response = await fetch(`${API_URL}/publicaciones`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` }, // sin Content-Type: el navegador arma el boundary multipart
-      body: formData,
-    });
-  } catch {
-    throw new Error('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
-  }
-  return parseErrorOrJson(response);
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', `${API_URL}/publicaciones`);
+    xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+    xhr.timeout = 4 * 60 * 1000; // 4 min: de sobra para un video de hasta 80MB, pero acotado
+
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable && onProgress) {
+        onProgress(Math.round((event.loaded / event.total) * 100));
+      }
+    };
+
+    xhr.onload = () => {
+      let data = {};
+      try {
+        data = JSON.parse(xhr.responseText);
+      } catch {
+        // respuesta no-JSON (ej. error de proxy); usamos el mensaje genérico de abajo
+      }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        resolve(data);
+      } else {
+        reject(new Error(data.error || 'Ocurrió un error inesperado.'));
+      }
+    };
+
+    xhr.onerror = () => reject(new Error('No se pudo conectar con el servidor. Intenta de nuevo más tarde.'));
+    xhr.ontimeout = () => reject(new Error('La subida tardó demasiado. Prueba con un archivo más ligero o revisa tu conexión.'));
+
+    xhr.send(formData);
+  });
 };
 
 export const updatePost = async (id, descripcion, token) => {

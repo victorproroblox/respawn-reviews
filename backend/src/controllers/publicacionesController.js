@@ -8,9 +8,17 @@ const PUNTOS_POR_TIPO = {
     video: 100
 };
 
-// Sube el archivo temporal (guardado en disco por Multer) a Cloudinary
-const subirACloudinary = (filePath, resourceType) =>
-    cloudinary.uploader.upload(filePath, { resource_type: resourceType, folder: 'respawn-reviews/publicaciones' });
+// Sube el archivo temporal (guardado en disco por Multer) a Cloudinary.
+// Los videos van por upload_large (subida por partes de 6MB): es la forma que recomienda
+// Cloudinary para video porque no depende de mandar el archivo entero en una sola petición,
+// así que es más rápida y no se queda pegada si la conexión tiene algún bache.
+const subirACloudinary = (filePath, resourceType) => {
+    const opciones = { resource_type: resourceType, folder: 'respawn-reviews/publicaciones' };
+    if (resourceType === 'video') {
+        return cloudinary.uploader.upload_large(filePath, { ...opciones, chunk_size: 6_000_000 });
+    }
+    return cloudinary.uploader.upload(filePath, opciones);
+};
 
 // --- CREAR PUBLICACIÓN ---
 const crearPublicacion = async (req, res) => {

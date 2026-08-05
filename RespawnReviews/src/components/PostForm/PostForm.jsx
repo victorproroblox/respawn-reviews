@@ -5,7 +5,7 @@ import { Button } from '../Button/Button';
 import { GamePicker } from '../GamePicker/GamePicker';
 import styles from './PostForm.module.css';
 
-const MAX_FILE_SIZE_MB = 200;
+const MAX_FILE_SIZE_MB = 80; // debe coincidir con el límite del backend (uploadMiddleware.js)
 
 // juegoFijo: si se pasa (ej. desde la ficha de un juego), la publicación queda ligada a ese
 // juego automáticamente y no se muestra el buscador de juegos.
@@ -16,6 +16,7 @@ export const PostForm = ({ onSubmit, juegoFijo = null }) => {
   const [juego, setJuego] = useState(juegoFijo);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [progreso, setProgreso] = useState(0);
   const fileInputRef = useRef(null);
 
   const limpiarArchivo = () => {
@@ -65,8 +66,10 @@ export const PostForm = ({ onSubmit, juegoFijo = null }) => {
     }
 
     setLoading(true);
-    const resultado = await onSubmit(archivo, descripcion.trim(), juego);
+    setProgreso(0);
+    const resultado = await onSubmit(archivo, descripcion.trim(), juego, setProgreso);
     setLoading(false);
+    setProgreso(0);
 
     if (resultado?.ok) {
       setDescripcion('');
@@ -130,7 +133,7 @@ export const PostForm = ({ onSubmit, juegoFijo = null }) => {
       <div className={styles.footer}>
         <span className={styles.hint}>Video: +100 pts · Imagen: +50 pts</span>
         <Button type="submit" disabled={loading}>
-          {loading ? 'Publicando...' : 'Publicar'}
+          {loading ? (progreso > 0 ? `Subiendo... ${progreso}%` : 'Preparando...') : 'Publicar'}
         </Button>
       </div>
     </form>

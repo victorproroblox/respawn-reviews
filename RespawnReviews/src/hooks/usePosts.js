@@ -40,9 +40,9 @@ export const usePosts = ({ juegoApiId } = {}) => {
     cargarPagina(1);
   }, [cargarPagina]);
 
-  const crear = async (archivo, descripcion, juego) => {
+  const crear = async (archivo, descripcion, juego, onProgress) => {
     try {
-      const data = await createPost(archivo, descripcion, juego, token);
+      const data = await createPost(archivo, descripcion, juego, token, onProgress);
       setPosts((prev) => [data.publicacion, ...prev]);
       return { ok: true };
     } catch (err) {

@@ -4,7 +4,10 @@ const os = require('os');
 const path = require('path');
 const crypto = require('crypto');
 
-const MAX_FILE_SIZE_MB = 200;
+// 200MB permitía videos que tardaban minutos (o nunca terminaban) en subir: el archivo viaja
+// completo cliente -> nuestro backend -> Cloudinary (dos saltos), así que entre más grande sea
+// el archivo, más se nota. 80MB es de sobra para un clip corto y sube en segundos.
+const MAX_FILE_SIZE_MB = 80;
 
 // Escribimos el archivo a un temporal en disco (no en memoria): con archivos de hasta 200MB,
 // guardarlo completo en RAM podría tumbar el servidor si suben varios usuarios a la vez.
