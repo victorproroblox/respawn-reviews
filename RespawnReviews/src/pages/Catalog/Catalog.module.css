@@ -96,10 +96,10 @@
   display: none;
 }
 
-/* Grid de Tarjetas (Más compacto y ajustado) */
+/* Grid de Tarjetas (columnas más angostas: las portadas son verticales) */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
   gap: 1.5rem;
 }
 

@@ -1,5 +1,5 @@
 // src/pages/Catalog/Catalog.jsx
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useGames } from '../../hooks/useGames';
 import { GameCard } from '../../components/GameCard/GameCard';
 import { Button } from '../../components/Button/Button';
@@ -8,20 +8,31 @@ import styles from './Catalog.module.css';
 
 export const Catalog = () => {
   const { games, loading, error, loadMore } = useGames();
-  
+
   const [genre, setGenre] = useState('Todos');
   const [platform, setPlatform] = useState('Todas');
   const [sortBy, setSortBy] = useState('default');
-  
+
   // ESTADO PARA EL EFECTO CINEMATOGRÁFICO (Práctica 8)
   const [hoveredCard, setHoveredCard] = useState(null);
 
-  const genresList = ['Todos', 'Action', 'RPG', 'Shooter', 'Adventure', 'Indie', 'Strategy'];
-  const platformsList = ['Todas', 'PC', 'PlayStation', 'Xbox', 'Nintendo'];
+  // Los géneros y plataformas salen de los juegos que realmente trae la API en este momento
+  // (antes era una lista fija en inglés de cuando usábamos RAWG, que ya no correspondía a los datos reales)
+  const genresList = useMemo(() => {
+    const encontrados = new Set();
+    games.forEach((game) => game.genres?.forEach((g) => encontrados.add(g)));
+    return ['Todos', ...Array.from(encontrados).sort()];
+  }, [games]);
+
+  const platformsList = useMemo(() => {
+    const encontradas = new Set();
+    games.forEach((game) => game.platforms?.forEach((p) => encontradas.add(p)));
+    return ['Todas', ...Array.from(encontradas).sort()];
+  }, [games]);
 
   const filteredGames = games
-    .filter((game) => genre === 'Todos' || game.genres.includes(genre))
-    .filter((game) => platform === 'Todas' || game.platforms.some(p => p.includes(platform)))
+    .filter((game) => genre === 'Todos' || game.genres?.includes(genre))
+    .filter((game) => platform === 'Todas' || game.platforms?.includes(platform))
     .sort((a, b) => {
       if (sortBy === 'score') return b.score - a.score;
       if (sortBy === 'popularity') return b.popularity - a.popularity;
