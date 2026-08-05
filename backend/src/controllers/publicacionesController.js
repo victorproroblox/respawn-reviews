@@ -13,23 +13,24 @@ const PUNTOS_POR_TIPO = {
 // Cloudinary para video porque no depende de mandar el archivo entero en una sola petición,
 // así que es más rápida y no se queda pegada si la conexión tiene algún bache.
 //
-// A diferencia de upload(), upload_large() NO regresa una Promise: su firma real es
-// (path, callback, options) y solo funciona con un callback de un solo argumento (el resultado,
-// o un objeto con .error si algo salió mal). Por eso lo envolvemos a mano en una Promise.
+// upload_large() NO regresa una Promise, hay que darle un callback. Ojo con el orden de
+// argumentos: el paquete "cloudinary" (v2) envuelve el módulo interno con un adaptador que
+// cambia la firma a (path, options, callback), y el callback tiene que ser estilo Node
+// (error, resultado) — no de un solo argumento como el módulo interno sin adaptar.
 const subirACloudinary = (filePath, resourceType) => {
     const opciones = { resource_type: resourceType, folder: 'respawn-reviews/publicaciones' };
     if (resourceType === 'video') {
         return new Promise((resolve, reject) => {
             cloudinary.uploader.upload_large(
                 filePath,
-                (resultado) => {
-                    if (resultado?.error) {
-                        reject(new Error(resultado.error.message || 'Error al subir el video a Cloudinary.'));
+                { ...opciones, chunk_size: 6_000_000 },
+                (error, resultado) => {
+                    if (error) {
+                        reject(new Error(error.message || 'Error al subir el video a Cloudinary.'));
                     } else {
                         resolve(resultado);
                     }
-                },
-                { ...opciones, chunk_size: 6_000_000 }
+                }
             );
         });
     }
