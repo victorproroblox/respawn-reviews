@@ -69,6 +69,13 @@
   border-color: var(--accent-cyan);
 }
 
+/* El desplegable nativo de <option> lo pinta el navegador con fondo blanco por defecto;
+   sin esto, el texto claro del tema oscuro queda casi invisible ahí adentro. */
+.filterGroup select option {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
 /* Panel de Resultados */
 .layout {
   display: flex;
