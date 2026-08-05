@@ -8,6 +8,7 @@ const multer = require('multer');
 const authRoutes = require('./routes/authRoutes');
 const publicacionesRoutes = require('./routes/publicacionesRoutes');
 const calificacionesRoutes = require('./routes/calificacionesRoutes');
+const gamesRoutes = require('./routes/gamesRoutes');
 
 // 2. Inicializar Express
 const app = express();
@@ -20,6 +21,7 @@ app.use(express.json()); // Permite recibir datos en formato JSON
 app.use('/api/auth', authRoutes);
 app.use('/api/publicaciones', publicacionesRoutes);
 app.use('/api/calificaciones', calificacionesRoutes);
+app.use('/api/games', gamesRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {

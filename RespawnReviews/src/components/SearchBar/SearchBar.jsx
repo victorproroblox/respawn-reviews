@@ -2,7 +2,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import { Search, Loader2 } from 'lucide-react';
-import { searchGames } from '../../services/rawgApi';
+// API activa: TheGamesDB (vía proxy del backend). RAWG quedó aislado en ../../services/rawgApi.
+import { searchGames } from '../../services/gamesDbApi';
+// import { searchGames } from '../../services/rawgApi';
 import styles from './SearchBar.module.css';
 
 export const SearchBar = () => {

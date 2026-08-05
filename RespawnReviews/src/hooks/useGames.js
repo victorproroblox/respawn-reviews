@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
-import { fetchGames } from '../services/rawgApi';
+// API activa: TheGamesDB (vía proxy del backend). RAWG quedó aislado en ../services/rawgApi
+// y se puede reactivar cambiando este import de vuelta.
+import { fetchGames } from '../services/gamesDbApi';
+// import { fetchGames } from '../services/rawgApi';
 
 export const useGames = () => {
   const [games, setGames] = useState([]);

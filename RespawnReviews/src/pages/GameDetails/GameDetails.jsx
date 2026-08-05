@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getGameDetails } from '../../services/rawgApi';
+// API activa: TheGamesDB (vía proxy del backend). RAWG quedó aislado en ../../services/rawgApi.
+import { getGameDetails } from '../../services/gamesDbApi';
+// import { getGameDetails } from '../../services/rawgApi';
 import { fetchCalificacionesPorJuego, guardarCalificacion } from '../../services/calificacionesApi';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../../components/Button/Button';
