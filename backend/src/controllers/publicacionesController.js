@@ -271,7 +271,9 @@ const eliminarPublicacion = async (req, res) => {
         }
 
         const publicacion = publicaciones[0];
-        if (publicacion.usuario_id !== req.user.id) {
+        const esDueno = publicacion.usuario_id === req.user.id;
+        const esAdmin = req.user.rol === 'Administrador';
+        if (!esDueno && !esAdmin) {
             return res.status(403).json({ error: 'No puedes eliminar publicaciones de otros usuarios.' });
         }
 
@@ -291,15 +293,17 @@ const eliminarPublicacion = async (req, res) => {
 
             await connection.execute('DELETE FROM publicaciones WHERE id = ?', [id]);
 
+            // Los puntos se le quitan al DUEÑO de la publicación, no a quien la borra
+            // (importante ahora que un admin puede borrar publicaciones ajenas)
             await connection.execute(
                 'UPDATE usuarios SET puntos = GREATEST(puntos - ?, 0) WHERE id = ?',
-                [puntosARestar, req.user.id]
+                [puntosARestar, publicacion.usuario_id]
             );
 
             await connection.execute(
                 `INSERT INTO historial_puntos (usuario_id, publicacion_id, puntos, motivo)
                  VALUES (?, NULL, ?, ?)`,
-                [req.user.id, -puntosARestar, `eliminacion_${publicacion.tipo_contenido}`]
+                [publicacion.usuario_id, -puntosARestar, `eliminacion_${publicacion.tipo_contenido}`]
             );
 
             await connection.commit();
