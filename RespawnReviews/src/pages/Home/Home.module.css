@@ -191,59 +191,30 @@
   width: 100%;
 }
 
-/* Teaser de "Explora los mapas de tus juegos favoritos" */
-.mapTeaser {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding: 1.75rem 2rem;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--bg-hover);
-  background: var(--bg-secondary);
-  text-decoration: none;
-  color: var(--text-primary);
-  transition: var(--transition);
+/* "Explora los mapas de tus juegos favoritos" — mapa embebido, compacto */
+.mapHint {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: -1rem 0 1rem;
 }
 
-.mapTeaser:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent-cyan);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
-}
-
-.mapTeaserIcon {
-  flex-shrink: 0;
-  width: 64px;
-  height: 64px;
+.mapLoading {
   display: flex;
-  align-items: center;
   justify-content: center;
-  border-radius: var(--radius-md);
-  background: var(--bg-primary);
+  align-items: center;
+  height: min(340px, 45vh);
+  border-radius: var(--radius-lg);
+  border: 1px dashed var(--bg-hover);
+  background: var(--bg-secondary);
   color: var(--accent-cyan);
 }
 
-.mapTeaserText {
-  flex: 1;
-  min-width: 0;
+.mapLoading svg {
+  animation: spin 1s linear infinite;
 }
 
-.mapTeaserTitleRow {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.3rem;
-}
-
-.mapTeaserTitleRow h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-}
-
-.mapTeaserText p {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
+@keyframes spin {
+  100% { transform: rotate(360deg); }
 }
 
 .demoBadge {
@@ -255,13 +226,6 @@
   letter-spacing: 1px;
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
-}
-
-@media (max-width: 640px) {
-  .mapTeaser {
-    flex-direction: column;
-    text-align: center;
-  }
 }
 
 /* Vitrina "Todo lo que puedes hacer aquí" (reemplaza Explorar por Categoría) */

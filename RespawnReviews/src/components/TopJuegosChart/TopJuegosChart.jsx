@@ -8,9 +8,9 @@ import styles from './TopJuegosChart.module.css';
 
 const LIMITE = 6;
 
-// Barra horizontal de los juegos mejor calificados por la comunidad. La escala siempre es
-// sobre 5 estrellas (no sobre el máximo local), para que el largo de la barra se pueda leer
-// como "tantas estrellas de 5" y no engañe si el mejor promedio no es un 5 perfecto.
+// Gráfica de barras (columnas) de los juegos mejor calificados por la comunidad. La escala
+// siempre es sobre 5 estrellas (no sobre el máximo local), para que la altura de la barra se
+// pueda leer como "tantas estrellas de 5" y no engañe si el mejor promedio no es un 5 perfecto.
 export const TopJuegosChart = () => {
   const [juegos, setJuegos] = useState(null); // null mientras carga
   const [error, setError] = useState(null);
@@ -65,13 +65,18 @@ export const TopJuegosChart = () => {
 
   return (
     <div className={styles.chart}>
-      {juegos.map((juego, index) => {
+      {juegos.map((juego) => {
         const promedio = Number(juego.promedio);
         const porcentaje = Math.max((promedio / 5) * 100, 4); // barra mínima visible aunque el promedio sea muy bajo
 
         return (
-          <Link key={juego.juego_api_id} to={`/game/${juego.juego_api_id}`} className={styles.row}>
-            <span className={styles.rank}>#{index + 1}</span>
+          <Link key={juego.juego_api_id} to={`/game/${juego.juego_api_id}`} className={styles.column}>
+            <div className={styles.barArea}>
+              <span className={styles.value} style={{ bottom: `calc(${porcentaje}% + 6px)` }}>
+                {promedio.toFixed(1)}
+              </span>
+              <div className={styles.bar} style={{ height: `${porcentaje}%` }} />
+            </div>
 
             {juego.imagen ? (
               <img src={juego.imagen} alt={juego.juego_nombre} className={styles.thumb} />
@@ -81,17 +86,10 @@ export const TopJuegosChart = () => {
               </span>
             )}
 
-            <div className={styles.rowMain}>
-              <span className={styles.gameName}>{juego.juego_nombre}</span>
-              <div className={styles.track}>
-                <div className={styles.fill} style={{ width: `${porcentaje}%` }} />
-              </div>
-              <span className={styles.count}>
-                {juego.total_calificaciones} reseña{juego.total_calificaciones !== 1 ? 's' : ''}
-              </span>
-            </div>
-
-            <span className={styles.value}>{promedio.toFixed(1)}</span>
+            <span className={styles.gameName}>{juego.juego_nombre}</span>
+            <span className={styles.count}>
+              {juego.total_calificaciones} reseña{juego.total_calificaciones !== 1 ? 's' : ''}
+            </span>
           </Link>
         );
       })}

@@ -1,13 +1,18 @@
 // src/pages/Home/Home.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense, lazy } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { ContactForm } from '../../components/ContactForm/ContactForm';
 import { TopJuegosChart } from '../../components/TopJuegosChart/TopJuegosChart';
+import { MAPAS } from '../Mapas/mapasConfig';
 import {
-  Zap, Trophy, Award, Mail, Gamepad2, Star, Camera, ArrowRight, Map,
+  Zap, Trophy, Award, Mail, Gamepad2, Star, Camera, ArrowRight, Map, Loader2,
 } from 'lucide-react';
 import styles from './Home.module.css';
+
+// Carga diferida: Leaflet (el mapa) pesa bastante, así que no retrasa la primera pintada del
+// Home — mientras carga se ve el spinner de abajo y el resto de la página ya está interactiva.
+const GameMap = lazy(() => import('../../components/GameMap/GameMap').then((m) => ({ default: m.GameMap })));
 
 const featureCards = [
   {
@@ -151,29 +156,28 @@ export const Home = () => {
         <TopJuegosChart />
       </section>
 
-      {/* Teaser de la sección de mapas interactivos (antes había "Tendencias Actuales" aquí) */}
+      {/* Mapa interactivo de ejemplo (antes había "Tendencias Actuales" aquí) */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <div className={styles.titleWithIcon}>
             <Map color="var(--accent-cyan)" />
             <h2>Explora los mapas de tus juegos favoritos</h2>
+            <span className={styles.demoBadge}>DEMO</span>
           </div>
+          <Link to="/mapas"><Button variant="outline">Ver mapa completo</Button></Link>
         </div>
-        <Link to="/mapas" className={styles.mapTeaser}>
-          <div className={styles.mapTeaserIcon}>
-            <Map size={36} />
-          </div>
-          <div className={styles.mapTeaserText}>
-            <div className={styles.mapTeaserTitleRow}>
-              <h3>Mapa interactivo: Grand Theft Auto V</h3>
-              <span className={styles.demoBadge}>DEMO</span>
+        <p className={styles.mapHint}>
+          Haz zoom, arrastra para moverte y da clic en los puntos del mapa para ver información.
+        </p>
+        <Suspense
+          fallback={(
+            <div className={styles.mapLoading}>
+              <Loader2 className={styles.spinner} size={28} />
             </div>
-            <p>Haz zoom, arrastra para moverte y da clic en los puntos del mapa para ver información.</p>
-          </div>
-          <span className={styles.spotlightCta}>
-            Explorar mapa <ArrowRight size={16} />
-          </span>
-        </Link>
+          )}
+        >
+          <GameMap mapa={MAPAS[0]} height="min(340px, 45vh)" />
+        </Suspense>
       </section>
 
       {/* Banner de Rankings (antes había un widget de estadísticas aquí que fallaba) */}
