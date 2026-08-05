@@ -1,0 +1,4 @@
+Pon aquí la imagen del mapa de GTA V con el nombre: gta-v.jpg
+
+(Si prefieres otro nombre o formato, cambia la ruta "imagen" en
+RespawnReviews/src/pages/Mapas/mapasConfig.js para que coincida.)

@@ -1,5 +1,7 @@
 // src/App.jsx
+import { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { MainLayout } from './layouts/MainLayout';
@@ -15,6 +17,17 @@ import { Terms } from './pages/Terms/Terms';
 import { Privacy } from './pages/Privacy/Privacy';
 import { Profile } from './pages/Profile/Profile';
 import { Rankings } from './pages/Rankings/Rankings';
+import styles from './App.module.css';
+
+// Carga diferida: Leaflet (usado solo aquí) pesa bastante, así que nadie más que entra a
+// /mapas paga ese costo en su primera carga de la página.
+const Mapas = lazy(() => import('./pages/Mapas/Mapas').then((m) => ({ default: m.Mapas })));
+
+const CargandoRuta = () => (
+  <div className={styles.routeLoading}>
+    <Loader2 size={32} className={styles.spinner} />
+  </div>
+);
 
 function App() {
   return (
@@ -32,6 +45,14 @@ function App() {
             <Route path="/terminos" element={<Terms />} />
             <Route path="/privacidad" element={<Privacy />} />
             <Route path="/rankings" element={<Rankings />} />
+            <Route
+              path="/mapas"
+              element={(
+                <Suspense fallback={<CargandoRuta />}>
+                  <Mapas />
+                </Suspense>
+              )}
+            />
 
             {/* Ruta protegida: cualquier usuario con sesión iniciada */}
             <Route

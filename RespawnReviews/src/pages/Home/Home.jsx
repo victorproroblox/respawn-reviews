@@ -1,12 +1,11 @@
 // src/pages/Home/Home.jsx
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useGames } from '../../hooks/useGames';
-import { GameCard } from '../../components/GameCard/GameCard';
 import { Button } from '../../components/Button/Button';
 import { ContactForm } from '../../components/ContactForm/ContactForm';
+import { TopJuegosChart } from '../../components/TopJuegosChart/TopJuegosChart';
 import {
-  Loader2, Zap, Trophy, Award, Mail, Gamepad2, Star, Camera, ArrowRight,
+  Zap, Trophy, Award, Mail, Gamepad2, Star, Camera, ArrowRight, Map,
 } from 'lucide-react';
 import styles from './Home.module.css';
 
@@ -38,12 +37,9 @@ const featureCards = [
 ];
 
 export const Home = () => {
-  const { games, loading } = useGames();
-
   // ESTADOS PARA NUESTROS EVENTOS
   const [isWeekend, setIsWeekend] = useState(false);
   const [isGotySeason, setIsGotySeason] = useState(false); // Práctica 7
-  const [hoveredCard, setHoveredCard] = useState(null);    // Práctica 8
 
   useEffect(() => {
     // 1. Lógica de Fin de Semana (Hero)
@@ -56,12 +52,6 @@ export const Home = () => {
     const checkGoty = currentMonth === 10 || currentMonth === 11;
     setIsGotySeason(checkGoty);
   }, []);
-
-  const featuredGames = games.slice(0, 4);
-  const trendingGames = games.slice(4, 8);
-
-  const focusClass = (id) =>
-    `${styles.focusWrapper} ${hoveredCard && hoveredCard !== id ? styles.outOfFocus : ''} ${hoveredCard === id ? styles.inFocus : ''}`;
 
   return (
     <div className={`${styles.home} ${isWeekend ? styles.weekendTheme : ''}`}>
@@ -149,61 +139,42 @@ export const Home = () => {
         </div>
       </section>
 
-      {/* Cargador mientras la API responde */}
-      {loading ? (
-        <div className={styles.loadingState}>
-          <Loader2 className={styles.spinner} size={48} />
-          <p>Cargando el universo gamer...</p>
+      {/* Juegos mejor valorados por la comunidad (antes había una grilla de juegos aquí) */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div className={styles.titleWithIcon}>
+            <Trophy color="var(--accent-purple)" />
+            <h2>Juegos mejor valorados por la comunidad</h2>
+          </div>
+          <Link to="/rankings"><Button variant="outline">Ver Rankings</Button></Link>
         </div>
-      ) : (
-        <>
-          {/* Juegos Destacados */}
-          <section className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.titleWithIcon}>
-                <Trophy color="var(--accent-purple)" />
-                <h2>Juegos Mejor Valorados</h2>
-              </div>
-              <Link to="/games"><Button variant="outline">Ver todos</Button></Link>
-            </div>
+        <TopJuegosChart />
+      </section>
 
-            <div className={styles.gamesGrid}>
-              {featuredGames.map((game) => (
-                <div
-                  key={game.id}
-                  onMouseEnter={() => setHoveredCard(game.id)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  className={focusClass(game.id)}
-                >
-                  <GameCard game={game} isGotySeason={isGotySeason} />
-                </div>
-              ))}
+      {/* Teaser de la sección de mapas interactivos (antes había "Tendencias Actuales" aquí) */}
+      <section className={styles.section}>
+        <div className={styles.sectionHeader}>
+          <div className={styles.titleWithIcon}>
+            <Map color="var(--accent-cyan)" />
+            <h2>Explora los mapas de tus juegos favoritos</h2>
+          </div>
+        </div>
+        <Link to="/mapas" className={styles.mapTeaser}>
+          <div className={styles.mapTeaserIcon}>
+            <Map size={36} />
+          </div>
+          <div className={styles.mapTeaserText}>
+            <div className={styles.mapTeaserTitleRow}>
+              <h3>Mapa interactivo: Grand Theft Auto V</h3>
+              <span className={styles.demoBadge}>DEMO</span>
             </div>
-          </section>
-
-          {/* Juegos en Tendencia */}
-          <section className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <div className={styles.titleWithIcon}>
-                <Zap color="var(--accent-cyan)" />
-                <h2>Tendencias Actuales</h2>
-              </div>
-            </div>
-            <div className={styles.gamesGrid}>
-              {trendingGames.map((game) => (
-                <div
-                  key={game.id}
-                  onMouseEnter={() => setHoveredCard(game.id)}
-                  onMouseLeave={() => setHoveredCard(null)}
-                  className={focusClass(game.id)}
-                >
-                  <GameCard game={game} isGotySeason={isGotySeason} />
-                </div>
-              ))}
-            </div>
-          </section>
-        </>
-      )}
+            <p>Haz zoom, arrastra para moverte y da clic en los puntos del mapa para ver información.</p>
+          </div>
+          <span className={styles.spotlightCta}>
+            Explorar mapa <ArrowRight size={16} />
+          </span>
+        </Link>
+      </section>
 
       {/* Banner de Rankings (antes había un widget de estadísticas aquí que fallaba) */}
       <section className={styles.rankingsBanner}>

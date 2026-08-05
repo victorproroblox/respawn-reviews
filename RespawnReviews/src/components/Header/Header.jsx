@@ -28,6 +28,7 @@ export const Header = () => {
     { title: 'Juegos', path: '/games' },
     { title: 'Rankings', path: '/rankings' },
     { title: 'Comunidad', path: '/community' },
+    { title: 'Mapas', path: '/mapas' },
     { title: 'Nosotros', path: '/community' },
     { title: 'Ayuda', path: '/community' },
   ];

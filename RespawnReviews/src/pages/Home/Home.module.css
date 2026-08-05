@@ -187,14 +187,81 @@
   font-weight: 700;
 }
 
-.gamesGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  gap: 1.5rem;
-}
-
 .section {
   width: 100%;
+}
+
+/* Teaser de "Explora los mapas de tus juegos favoritos" */
+.mapTeaser {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.75rem 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--bg-hover);
+  background: var(--bg-secondary);
+  text-decoration: none;
+  color: var(--text-primary);
+  transition: var(--transition);
+}
+
+.mapTeaser:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-cyan);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.mapTeaserIcon {
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  background: var(--bg-primary);
+  color: var(--accent-cyan);
+}
+
+.mapTeaserText {
+  flex: 1;
+  min-width: 0;
+}
+
+.mapTeaserTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.3rem;
+}
+
+.mapTeaserTitleRow h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.mapTeaserText p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.demoBadge {
+  background: rgba(139, 92, 246, 0.15);
+  border: 1px solid var(--accent-purple);
+  color: var(--accent-purple);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+}
+
+@media (max-width: 640px) {
+  .mapTeaser {
+    flex-direction: column;
+    text-align: center;
+  }
 }
 
 /* Vitrina "Todo lo que puedes hacer aquí" (reemplaza Explorar por Categoría) */
@@ -340,25 +407,6 @@
   max-width: 500px;
 }
 
-/* Estados de carga */
-.loadingState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 4rem 0;
-  color: var(--accent-cyan);
-  gap: 1rem;
-}
-
-.spinner {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  100% { transform: rotate(360deg); }
-}
-
 /* Clase que se activa solo en Fin de Semana */
 .weekendTheme {
   /* Cambia el fondo por un degradado cyberpunk/gamer más agresivo */
@@ -440,22 +488,3 @@
   backdrop-filter: blur(10px);
 }
 
-/* EFECTOS DEL ENFOQUE CINEMATOGRÁFICO (Práctica 8) */
-.focusWrapper {
-  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-/* Clase para el juego que estás tocando */
-.inFocus {
-  transform: scale(1.05);
-  z-index: 10;
-  position: relative;
-  box-shadow: 0 15px 35px rgba(250, 204, 21, 0.2);
-}
-
-/* Clase para el resto de los juegos (Se desenfocan y oscurecen) */
-.outOfFocus {
-  opacity: 0.3;
-  filter: blur(4px) grayscale(50%);
-  transform: scale(0.95);
-}
