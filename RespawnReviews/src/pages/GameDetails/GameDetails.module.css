@@ -178,15 +178,6 @@
   font-size: 0.95rem;
 }
 
-.score {
-  background: #10b981; /* Verde Metacritic */
-  color: white !important;
-  display: inline-block;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-weight: bold;
-}
-
 /* CALIFICACIONES Y RESEÑAS */
 .reviewsSection {
   display: flex;

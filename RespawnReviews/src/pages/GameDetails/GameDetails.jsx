@@ -165,10 +165,6 @@ export const GameDetails = () => {
             <h4>Plataformas</h4>
             <p>{game.platforms?.map(p => p.platform.name).join(', ') || 'N/A'}</p>
           </div>
-          <div>
-            <h4>Puntuación Metacritic</h4>
-            <p className={styles.score}>{game.metacritic || 'N/A'}</p>
-          </div>
         </div>
       </div>
 
