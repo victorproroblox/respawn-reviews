@@ -98,7 +98,7 @@ export const Profile = () => {
           <div className={styles.loadingState}><Loader2 className={styles.spinner} size={28} /></div>
         ) : calificaciones.length === 0 ? (
           <p className={styles.emptyText}>
-            Todavía no has calificado ningún juego. <Link to="/games">Explora el catálogo</Link>.
+            Todavía no has calificado ningún juego. <Link to="/games">Explora los juegos</Link>.
           </p>
         ) : (
           <div className={styles.ratingsList}>

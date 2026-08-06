@@ -1,19 +1,10 @@
 // src/pages/About/About.jsx
 import { Link } from 'react-router-dom';
 import {
-  Gamepad2, Newspaper, Users, Compass, Sparkles, ArrowRight, Quote, ImageIcon,
+  Gamepad2, Newspaper, Users, Compass, Sparkles, ArrowRight, Quote,
 } from 'lucide-react';
 import { Button } from '../../components/Button/Button';
 import styles from './About.module.css';
-
-// Placeholder de imagen: por ahora un panel con degradado + ícono, para que sea evidente que
-// es un espacio reservado. Cuando haya fotos reales, solo hay que reemplazarlo por un <img>.
-const PlaceholderImage = ({ label, className = '' }) => (
-  <div className={`${styles.placeholder} ${className}`}>
-    <ImageIcon size={28} />
-    <span>{label}</span>
-  </div>
-);
 
 const OBJETIVOS = [
   {
@@ -29,7 +20,7 @@ const OBJETIVOS = [
   {
     icon: <Compass size={22} />,
     titulo: 'Descubrir nuevos juegos',
-    texto: 'Nuestro catálogo y las reseñas de la comunidad te ayudan a encontrar tu próxima obsesión, sin importar el género o la plataforma.',
+    texto: 'Nuestra sección de Juegos y las reseñas de la comunidad te ayudan a encontrar tu próxima obsesión, sin importar el género o la plataforma.',
   },
   {
     icon: <Sparkles size={22} />,
@@ -39,10 +30,10 @@ const OBJETIVOS = [
 ];
 
 const GALERIA = [
-  { label: 'Comunidad activa' },
-  { label: 'Reseñas honestas' },
-  { label: 'Clips destacados' },
-  { label: 'Rankings en vivo' },
+  { src: 'https://assets.xboxservices.com/assets/2b/d2/2bd239ef-b3a5-4b50-b5a5-ba6418012534.jpg?n=Xbox-360-Games_Feature-0_Back-Compat_1040x585_01.jpg', alt: 'Clásicos de Xbox' },
+  { src: 'https://media.vandal.net/m/7-2024/20247101632970_1.jpg', alt: 'Lanzamientos y novedades' },
+  { src: 'https://i.redd.it/emf0n3wtu5be1.jpeg', alt: 'Momentos de la comunidad' },
+  { src: 'https://sm.ign.com/ign_es/screenshot/default/mejores-juegos-nintendo-switch_9vht.jpg', alt: 'Lo mejor de Nintendo Switch' },
 ];
 
 export const About = () => (
@@ -63,7 +54,9 @@ export const About = () => (
           <Link to="/community"><Button variant="outline" size="lg">Ver la Comunidad</Button></Link>
         </div>
       </div>
-      <PlaceholderImage label="Banner de la comunidad" className={styles.heroBanner} />
+      <div className={styles.heroBanner}>
+        <img src="https://i.blogs.es/4d650a/gogga/1366_2000.jpeg" alt="Comunidad gamer" className={styles.heroBannerImg} />
+      </div>
     </section>
 
     {/* Objetivos */}
@@ -86,19 +79,28 @@ export const About = () => (
     {/* Galería */}
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
-        <h2>Así se vive la comunidad</h2>
-        <p>Un vistazo a lo que comparten los gamers dentro de la plataforma.</p>
+        <h2>Nos encantan los juegos de todas las plataformas</h2>
+        <p>Xbox, PlayStation, Nintendo o PC: no importa dónde juegues, aquí hay un lugar para ti.</p>
       </div>
       <div className={styles.gallery}>
         {GALERIA.map((img) => (
-          <PlaceholderImage key={img.label} label={img.label} className={styles.galleryCard} />
+          <div key={img.src} className={styles.galleryCard}>
+            <img src={img.src} alt={img.alt} className={styles.galleryImg} loading="lazy" />
+            <span className={styles.galleryCaption}>{img.alt}</span>
+          </div>
         ))}
       </div>
     </section>
 
     {/* Misión: imagen grande + texto */}
     <section className={styles.storySection}>
-      <PlaceholderImage label="Nuestra comunidad en acción" className={styles.storyImage} />
+      <div className={styles.storyImage}>
+        <img
+          src="https://imagenes.hobbyconsolas.com/files/image_640_360/uploads/imagenes/2023/04/25/69021dd53fffa.jpeg"
+          alt="Nuestra comunidad en acción"
+          className={styles.storyImageImg}
+        />
+      </div>
       <div className={styles.storyText}>
         <span className={styles.badge}><Quote size={14} /> Nuestra misión</span>
         <h2>Le damos voz a cada jugador</h2>
@@ -114,7 +116,7 @@ export const About = () => (
           construyendo con la meta de ser el punto de encuentro favorito de los gamers de habla hispana.
         </p>
         <Link to="/games" className={styles.storyLink}>
-          Explorar el catálogo <ArrowRight size={16} />
+          Explorar Juegos <ArrowRight size={16} />
         </Link>
       </div>
     </section>

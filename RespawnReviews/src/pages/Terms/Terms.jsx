@@ -22,7 +22,7 @@ const SECCIONES = [
     titulo: 'Uso permitido de la plataforma',
     parrafos: ['Respawn Reviews está diseñada para que descubras videojuegos, los califiques, escribas reseñas y compartas contenido relacionado con tu experiencia como jugador. Puedes usar la plataforma para:'],
     lista: [
-      'Explorar el catálogo de videojuegos y leer reseñas de otros usuarios.',
+      'Explorar los juegos disponibles y leer reseñas de otros usuarios.',
       'Calificar juegos que hayas jugado y compartir tu opinión mediante una reseña.',
       'Publicar imágenes o videos (clips) relacionados con tu experiencia de juego.',
       'Consultar los rankings de la comunidad y los mapas interactivos disponibles.',
@@ -50,7 +50,7 @@ const SECCIONES = [
     titulo: 'Propiedad intelectual',
     parrafos: [
       'El nombre "Respawn Reviews", su logotipo, diseño visual y el código de la plataforma son propiedad de sus creadores y están protegidos por las leyes de propiedad intelectual aplicables.',
-      'La información de videojuegos (nombres, portadas, descripciones) que se muestra en el catálogo proviene de fuentes externas especializadas y pertenece a sus respectivos titulares; Respawn Reviews la utiliza únicamente con fines informativos.',
+      'La información de videojuegos (nombres, portadas, descripciones) que se muestra en la sección de Juegos proviene de fuentes externas especializadas y pertenece a sus respectivos titulares; Respawn Reviews la utiliza únicamente con fines informativos.',
       'El contenido que tú publicas (reseñas, calificaciones, imágenes y videos) sigue siendo tuyo. Al publicarlo en la plataforma nos otorgas una licencia no exclusiva, mundial y libre de regalías para almacenarlo, mostrarlo y distribuirlo dentro de Respawn Reviews. Eres el único responsable de contar con los derechos necesarios sobre el contenido que subes.',
     ],
   },
@@ -60,7 +60,7 @@ const SECCIONES = [
     titulo: 'Limitación de responsabilidad',
     parrafos: [
       'Respawn Reviews se ofrece "tal cual" y "según disponibilidad". Aunque nos esforzamos por mantener la plataforma funcionando correctamente, no garantizamos que el servicio esté libre de interrupciones, errores o vulnerabilidades.',
-      'La información del catálogo de videojuegos proviene de una fuente externa y puede contener imprecisiones que no están bajo nuestro control. Las reseñas, calificaciones y opiniones publicadas por los usuarios reflejan puntos de vista personales y no representan la opinión oficial de Respawn Reviews.',
+      'La información de los juegos proviene de una fuente externa y puede contener imprecisiones que no están bajo nuestro control. Las reseñas, calificaciones y opiniones publicadas por los usuarios reflejan puntos de vista personales y no representan la opinión oficial de Respawn Reviews.',
       'En la medida permitida por la ley, no seremos responsables por daños indirectos, incidentales o derivados del uso o la imposibilidad de uso de la plataforma.',
     ],
   },

@@ -36,7 +36,7 @@ const featureCards = [
     icon: <Star size={32} />,
     title: 'Deja tu huella',
     text: 'Califica con medias estrellas y escribe reseñas que ayuden a otros gamers a decidir.',
-    cta: 'Explorar Catálogo',
+    cta: 'Explorar Juegos',
     to: '/games',
     className: 'cardCyan',
   },
@@ -87,7 +87,7 @@ export const Home = () => {
                 </p>
                 <div className={styles.heroActions}>
                   <Link to="/games">
-                    <Button size="lg">Ir al Catálogo</Button>
+                    <Button size="lg">Ir a Juegos</Button>
                   </Link>
                 </div>
               </>
@@ -99,7 +99,7 @@ export const Home = () => {
                 </p>
                 <div className={styles.heroActions}>
                   <Link to="/games">
-                    <Button size="lg">Explorar Catálogo</Button>
+                    <Button size="lg">Explorar Juegos</Button>
                   </Link>
                   <Link to="/register">
                     <Button variant="outline" size="lg">Unirse ahora</Button>

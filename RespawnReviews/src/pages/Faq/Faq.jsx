@@ -13,7 +13,7 @@ const PREGUNTAS = [
   {
     pregunta: '¿Necesito una cuenta para usar la plataforma?',
     respuesta:
-      'No. Cualquier persona puede explorar el catálogo, leer reseñas y ver publicaciones sin registrarse. Para calificar juegos, escribir reseñas o publicar en la Comunidad sí necesitas crear una cuenta gratuita.',
+      'No. Cualquier persona puede explorar los juegos, leer reseñas y ver publicaciones sin registrarse. Para calificar juegos, escribir reseñas o publicar en la Comunidad sí necesitas crear una cuenta gratuita.',
   },
   {
     pregunta: '¿Cómo funciona el sistema de puntos?',
@@ -33,7 +33,7 @@ const PREGUNTAS = [
   {
     pregunta: '¿De dónde saca Respawn Reviews la información de los juegos?',
     respuesta:
-      'El catálogo, las búsquedas y los detalles de cada juego vienen de una base de datos externa de videojuegos. Las calificaciones, reseñas y publicaciones son 100% de nuestra comunidad.',
+      'Los juegos, las búsquedas y los detalles de cada juego vienen de una base de datos externa de videojuegos. Las calificaciones, reseñas y publicaciones son 100% de nuestra comunidad.',
   },
   {
     pregunta: '¿Qué tipo de archivos puedo subir en la Comunidad?',

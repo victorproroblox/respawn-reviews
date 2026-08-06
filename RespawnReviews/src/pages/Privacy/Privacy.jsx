@@ -82,7 +82,7 @@ const SECCIONES = [
     parrafos: ['Para operar Respawn Reviews nos apoyamos en un número reducido de proveedores externos, cada uno con un propósito específico:'],
     lista: [
       'Almacenamiento multimedia: las publicaciones y fotos de perfil que subes se guardan a través de un proveedor especializado en hospedaje de imágenes y videos.',
-      'Catálogo de videojuegos: la información de los juegos (nombres, portadas, géneros, plataformas) proviene de una base de datos externa especializada; nosotros no la generamos ni la verificamos manualmente.',
+      'Juegos: la información de los juegos (nombres, portadas, géneros, plataformas) proviene de una base de datos externa especializada; nosotros no la generamos ni la verificamos manualmente.',
       'Hospedaje: nuestro sitio, servidor y base de datos están alojados en proveedores de infraestructura en la nube.',
       'Asistente virtual: el chatbot de la plataforma se apoya en un servicio externo de automatización para generar respuestas.',
     ],

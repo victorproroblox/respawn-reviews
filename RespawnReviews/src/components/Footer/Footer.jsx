@@ -27,7 +27,7 @@ export const Footer = () => {
 
         <div className={styles.linksGroup}>
           <h3>Plataforma</h3>
-          <Link to="/games">Catálogo de Juegos</Link>
+          <Link to="/games">Juegos</Link>
           <Link to="/community">Comunidad</Link>
         </div>
 
