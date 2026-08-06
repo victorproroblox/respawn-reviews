@@ -1,19 +1,163 @@
-/* Estilo compartido para el contenido de páginas legales tipo prosa (Términos, Privacidad) */
+/* Estilo compartido para el contenido de páginas legales (Términos, Privacidad) */
 .sections {
   display: flex;
   flex-direction: column;
-  gap: 1.75rem;
+  gap: 1.25rem;
 }
 
-.section h2 {
-  font-size: 1.1rem;
+/* --- Índice --- */
+.toc {
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-lg);
+  padding: 1.5rem 1.75rem;
+}
+
+.tocLabel {
+  display: block;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 0.9rem;
+}
+
+.tocList {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1.5rem;
+  list-style: none;
+}
+
+.tocList a {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+  padding: 0.4rem 0;
+  transition: var(--transition);
+}
+
+.tocList a:hover {
+  color: var(--accent-cyan);
+}
+
+.tocNumero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  color: var(--accent-purple);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+@media (max-width: 600px) {
+  .tocList {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* --- Tarjeta de sección --- */
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem;
+  scroll-margin-top: 90px; /* para que el anchor del índice no quede tapado por el header */
+  transition: var(--transition);
+}
+
+.card:hover {
+  border-color: var(--accent-purple);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.cardIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  background: rgba(139, 92, 246, 0.12);
+  color: var(--accent-purple);
+}
+
+.cardHeader h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--text-primary);
-  margin-bottom: 0.5rem;
 }
 
-.section p {
+.cardNumero {
+  color: var(--accent-cyan);
+  font-variant-numeric: tabular-nums;
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding-left: calc(40px + 0.9rem); /* alinea el texto con el título, no con el ícono */
+}
+
+.cardBody p {
   color: var(--text-secondary);
   line-height: 1.7;
   font-size: 0.95rem;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  list-style: none;
+}
+
+.list li {
+  position: relative;
+  padding-left: 1.3rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-cyan);
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 1.25rem;
+  }
+
+  .cardBody {
+    padding-left: 0;
+  }
 }

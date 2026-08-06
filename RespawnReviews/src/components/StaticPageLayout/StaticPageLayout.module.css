@@ -6,6 +6,10 @@
   gap: 2rem;
 }
 
+.containerWide {
+  max-width: 980px;
+}
+
 .backLink {
   display: inline-flex;
   align-items: center;
@@ -23,17 +27,19 @@
 .header {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
-  border-bottom: 1px solid var(--bg-hover);
-  padding-bottom: 1.5rem;
+  gap: 1.25rem;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--bg-hover);
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.08), rgba(6, 182, 212, 0.06));
 }
 
 .iconChip {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: var(--radius-lg);
   background: rgba(6, 182, 212, 0.12);
   color: var(--accent-cyan);
@@ -41,7 +47,7 @@
 }
 
 .header h1 {
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 0.4rem;
@@ -49,14 +55,30 @@
 
 .subtitle {
   color: var(--text-secondary);
-  font-size: 1rem;
+  font-size: 1.02rem;
+  line-height: 1.5;
+  max-width: 640px;
 }
 
 .updated {
-  color: var(--text-secondary);
-  font-size: 0.8rem;
-  margin-top: 0.5rem;
-  font-style: italic;
+  display: inline-flex;
+  align-items: center;
+  color: var(--accent-cyan);
+  background: rgba(6, 182, 212, 0.1);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin-top: 0.85rem;
+}
+
+@media (max-width: 560px) {
+  .header {
+    padding: 1.5rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .content {

@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import styles from './StaticPageLayout.module.css';
 
 // Layout compartido por las páginas complementarias (FAQ, Términos, Privacidad)
-export const StaticPageLayout = ({ icon, title, subtitle, updated, children }) => (
-  <div className={styles.container}>
+// wide: las páginas legales necesitan más aire para las tarjetas de sección; FAQ no lo usa.
+export const StaticPageLayout = ({ icon, title, subtitle, updated, wide = false, children }) => (
+  <div className={`${styles.container} ${wide ? styles.containerWide : ''}`}>
     <Link to="/" className={styles.backLink}>
       <ArrowLeft size={18} /> Volver al inicio
     </Link>
