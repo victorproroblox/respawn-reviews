@@ -1,0 +1,132 @@
+.section {
+  width: 100%;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--bg-hover);
+  padding-bottom: 1rem;
+}
+
+.titleWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.titleWithIcon h2 {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.card {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(250, 204, 21, 0.3);
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.06), rgba(139, 92, 246, 0.06));
+}
+
+.gameImage {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.clipArea {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.mediaContainer {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-primary);
+  aspect-ratio: 16 / 9;
+}
+
+.media {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.gameBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  align-self: flex-start;
+  padding: 0.3rem 0.7rem 0.3rem 0.3rem;
+  border-radius: 999px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.gameBadge:hover {
+  border-color: #facc15;
+}
+
+.gameBadgeImage {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.gameBadgeImageFallback {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-purple);
+}
+
+.gameBadgeName {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 0.82rem;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.descripcion {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 720px) {
+  .card {
+    grid-template-columns: 1fr;
+  }
+
+  .gameImage {
+    min-height: 160px;
+  }
+}

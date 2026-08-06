@@ -22,7 +22,8 @@ export const Header = () => {
     navigate('/');
   };
 
-  const puedeVerPanel = user?.rol === 'Administrador' || user?.rol === 'Editor';
+  // El Administrador nunca llega a este Header (tiene su propio AdminLayout completo)
+  const puedeVerPanel = user?.rol === 'Editor';
 
   const navLinks = [
     { title: 'Juegos', path: '/games' },

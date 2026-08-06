@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../../components/Button/Button';
 import { ContactForm } from '../../components/ContactForm/ContactForm';
 import { TopJuegosChart } from '../../components/TopJuegosChart/TopJuegosChart';
+import { DestacadoSemana } from '../../components/DestacadoSemana/DestacadoSemana';
 import { MAPAS } from '../Mapas/mapasConfig';
 import {
   Zap, Trophy, Award, Mail, Gamepad2, Star, Camera, ArrowRight, Map, Loader2,
@@ -124,6 +125,9 @@ export const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Juego y clip de la semana (lo elige el Editor desde su panel) */}
+      <DestacadoSemana />
 
       {/* Vitrina de la plataforma (reemplaza "Explorar por Categoría") */}
       <section className={styles.section}>

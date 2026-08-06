@@ -1,11 +1,12 @@
 // src/pages/Panel/Panel.jsx
 import { useEffect, useState } from 'react';
-import { ShieldCheck, Users, Image as ImageIcon, Star, Trophy, Wrench } from 'lucide-react';
+import { ShieldCheck, Users, Image as ImageIcon, Star, Trophy } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { fetchEstadisticas } from '../../services/estadisticasApi';
 import { UsuariosTab } from './UsuariosTab';
 import { PublicacionesTab } from './PublicacionesTab';
 import { CalificacionesTab } from './CalificacionesTab';
+import { EditorDashboard } from './EditorDashboard';
 import styles from './Panel.module.css';
 
 const TABS = [
@@ -76,21 +77,7 @@ const AdminPanel = () => {
   );
 };
 
-// El rol Editor ya puede entrar a /panel (se valida en la ruta), pero sus herramientas
-// todavía no están listas — esto evita dejarlo en una pantalla rota mientras tanto.
-const EditorPlaceholder = () => (
-  <div className={styles.panel}>
-    <header className={styles.header}>
-      <Wrench size={28} color="var(--accent-cyan)" />
-      <div>
-        <h1>Panel de Editor</h1>
-        <p>Las herramientas para editores están en construcción — muy pronto vas a poder usarlas aquí.</p>
-      </div>
-    </header>
-  </div>
-);
-
 export const Panel = () => {
   const { user } = useAuth();
-  return user?.rol === 'Administrador' ? <AdminPanel /> : <EditorPlaceholder />;
+  return user?.rol === 'Administrador' ? <AdminPanel /> : <EditorDashboard />;
 };

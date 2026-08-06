@@ -12,6 +12,8 @@ const gamesRoutes = require('./routes/gamesRoutes');
 const estadisticasRoutes = require('./routes/estadisticasRoutes');
 const contactoRoutes = require('./routes/contactoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const editorRoutes = require('./routes/editorRoutes');
+const destacadoRoutes = require('./routes/destacadoRoutes');
 
 // 2. Inicializar Express
 const app = express();
@@ -28,6 +30,8 @@ app.use('/api/games', gamesRoutes);
 app.use('/api/estadisticas', estadisticasRoutes);
 app.use('/api/contacto', contactoRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/editor', editorRoutes);
+app.use('/api/destacado-semana', destacadoRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {
