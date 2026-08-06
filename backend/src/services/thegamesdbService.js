@@ -5,9 +5,15 @@ const BASE_URL = 'https://api.thegamesdb.net/v1';
 const API_KEY = process.env.THEGAMESDB_API_KEY;
 
 const PLATAFORMA_CATALOGO_POR_DEFECTO = 1; // PC: catálogo más grande y variado
-const CACHE_TTL_MS = 60 * 60 * 1000; // 1 hora
 
-// Los catálogos de género/plataforma/desarrollador cambian poquísimo: los cacheamos
+// La API key gratuita de TheGamesDB solo da 1000 peticiones AL MES (se agotó en un solo día
+// con el tráfico normal del sitio). Los datos de un juego casi no cambian, así que un caché
+// largo cuesta muy poco en "datos desactualizados" y ahorra muchísima cuota: 24h significa que
+// cada juego/página/búsqueda como mucho pide a la API real una vez al día, sin importar cuánta
+// gente lo visite mientras tanto.
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 horas
+
+// Los catálogos de género/plataforma/desarrollador cambian todavía menos: los cacheamos
 // en memoria para no gastar la cuota mensual de la API key en cada request.
 const cache = {
     genres: { data: null, expiresAt: 0 },
@@ -15,11 +21,7 @@ const cache = {
     developers: { data: null, expiresAt: 0 },
 };
 
-// Caché genérica por clave (id de juego, página del catálogo, término de búsqueda). El detalle
-// de un juego en particular no cambiaba y sin embargo se pedía a la API en vivo cada vez —
-// con varias vistas (Home, ficha del juego) pidiendo detalle de los mismos juegos seguido,
-// eso agota la cuota mensual de la API key rapidísimo. Un TTL de 1 hora es más que suficiente
-// para datos que casi no cambian, y tira las entradas viejas para no crecer sin límite.
+// Caché genérica por clave (id de juego, página del catálogo, término de búsqueda).
 const cachePorClave = (ttlMs, maxEntradas = 200) => {
     const mapa = new Map();
     return async (clave, fn) => {
