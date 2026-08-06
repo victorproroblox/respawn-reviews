@@ -3,7 +3,10 @@
   align-items: flex-start;
   gap: 1.25rem;
   overflow-x: auto;
-  padding: 0.5rem 0.25rem 0.75rem;
+  /* padding-top generoso a propósito: "overflow-x: auto" hace que el navegador también recorte
+     verticalmente (es un comportamiento estándar de CSS), y el valor (ej. "5.0") se dibuja
+     encima de la barra — sin este espacio, una barra al 100% se corta por arriba. */
+  padding: 2rem 0.25rem 0.75rem;
 }
 
 .column {
