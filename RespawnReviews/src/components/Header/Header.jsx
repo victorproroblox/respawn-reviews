@@ -30,8 +30,7 @@ export const Header = () => {
     { title: 'Rankings', path: '/rankings' },
     { title: 'Comunidad', path: '/community' },
     { title: 'Mapas', path: '/mapas' },
-    { title: 'Nosotros', path: '/community' },
-    { title: 'Ayuda', path: '/community' },
+    { title: 'Nosotros', path: '/nosotros' },
   ];
 
   return (

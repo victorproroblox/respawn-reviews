@@ -14,6 +14,7 @@ import { Register } from './pages/Register/Register';
 import { Panel } from './pages/Panel/Panel';
 import { GameDetails } from './pages/GameDetails/GameDetails';
 import { Community } from './pages/Community/Community';
+import { About } from './pages/About/About';
 import { Faq } from './pages/Faq/Faq';
 import { Terms } from './pages/Terms/Terms';
 import { Privacy } from './pages/Privacy/Privacy';
@@ -51,6 +52,7 @@ const SiteRoutes = () => (
 
       <Route path="games" element={<Catalog />} />
       <Route path="/community" element={<Community />} />
+      <Route path="/nosotros" element={<About />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/faq" element={<Faq />} />
