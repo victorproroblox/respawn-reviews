@@ -40,9 +40,6 @@ export const UsuariosTab = () => {
 
   const handleCambiarEstado = async (usuario) => {
     const nuevoEstado = !usuario.activo;
-    if (!nuevoEstado && !window.confirm(`¿Deshabilitar a ${usuario.nombre}? No podrá iniciar sesión hasta que lo vuelvas a habilitar.`)) {
-      return;
-    }
 
     setCambiandoId(usuario.id);
     try {
