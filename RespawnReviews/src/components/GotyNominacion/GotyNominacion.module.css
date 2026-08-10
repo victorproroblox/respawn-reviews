@@ -1,0 +1,140 @@
+/* src/components/GotyNominacion/GotyNominacion.module.css */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(250, 204, 21, 0.25);
+  background: linear-gradient(135deg, rgba(250, 204, 21, 0.06), rgba(139, 92, 246, 0.05));
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.header p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+}
+
+.loginPrompt {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.loginPrompt a {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.loginPrompt a:hover {
+  text-decoration: underline;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.pickerRow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.pickerWrapper {
+  flex: 1;
+  max-width: 420px;
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  color: #facc15;
+}
+
+@keyframes spin {
+  100% { transform: rotate(360deg); }
+}
+
+.msgOk {
+  color: #4ade80;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.msgError {
+  color: #ef4444;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.misNominaciones {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 1.25rem;
+}
+
+.misNominaciones h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.9rem;
+}
+
+.empty {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.85rem 0.4rem 0.4rem;
+  border-radius: 999px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--bg-hover);
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.item img {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.itemImageFallback {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}

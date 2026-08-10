@@ -423,32 +423,61 @@
   50% { transform: scale(1.05); }
 }
 
-/* src/pages/Home/Home.module.css */
-
-/* Banner Superior GOTY */
-/* src/pages/Home/Home.module.css */
-
+/* Banner Superior de Temporada GOTY */
 .gotyBanner {
-  background: linear-gradient(90deg, #1a1a1a, #422006, #1a1a1a);
-  border: 1px solid #ca8a04;
-  color: #facc15;
-  padding: 1rem;
+  position: sticky;
+  top: 85px; /* Espacio para que el menú principal quepa arriba */
+  z-index: 90; /* Un poco por debajo del menú, para que este siempre mande */
+  overflow: hidden;
+  background: linear-gradient(90deg, #1a1305, #422006, #1a1305);
+  border: 1px solid rgba(250, 204, 21, 0.5);
+  color: #fde68a;
+  padding: 0.9rem 1.25rem;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  font-weight: bold;
+  gap: 0.75rem;
+  font-weight: 700;
+  font-size: 0.95rem;
   margin-bottom: 2rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  
-  /* --- LA CORRECCIÓN --- */
-  position: sticky;
-  top: 85px; /* Dejamos 85px de espacio para que tu menú principal quepa arriba */
-  z-index: 90; /* Lo bajamos un poquito para que el menú siempre mande */
-  
-  box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+  letter-spacing: 0.3px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 25px rgba(250, 204, 21, 0.12);
   backdrop-filter: blur(10px);
+  animation: gotyGlow 3s ease-in-out infinite;
+}
+
+/* Brillo dorado que recorre el banner, para que se note que es un evento especial */
+.gotyBanner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 20%, rgba(250, 204, 21, 0.18) 50%, transparent 80%);
+  background-size: 250% 100%;
+  animation: gotyShimmer 4s linear infinite;
+  pointer-events: none;
+}
+
+.gotyBanner strong {
+  color: #facc15;
+}
+
+@keyframes gotyGlow {
+  0%, 100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(250, 204, 21, 0.1); }
+  50% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7), 0 0 35px rgba(250, 204, 21, 0.28); }
+}
+
+@keyframes gotyShimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -50% 0; }
+}
+
+@media (max-width: 640px) {
+  .gotyBanner {
+    top: 70px;
+    font-size: 0.82rem;
+    padding: 0.75rem 1rem;
+  }
 }
 

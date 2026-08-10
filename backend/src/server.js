@@ -14,6 +14,9 @@ const contactoRoutes = require('./routes/contactoRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const editorRoutes = require('./routes/editorRoutes');
 const destacadoRoutes = require('./routes/destacadoRoutes');
+const eventosRoutes = require('./routes/eventosRoutes');
+const gotyRoutes = require('./routes/gotyRoutes');
+const chatbotRoutes = require('./routes/chatbotRoutes');
 
 // 2. Inicializar Express
 const app = express();
@@ -32,6 +35,9 @@ app.use('/api/contacto', contactoRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/editor', editorRoutes);
 app.use('/api/destacado-semana', destacadoRoutes);
+app.use('/api/eventos', eventosRoutes);
+app.use('/api/goty', gotyRoutes);
+app.use('/api/chatbot', chatbotRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {

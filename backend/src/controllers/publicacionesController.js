@@ -2,10 +2,18 @@
 const fs = require('fs/promises');
 const cloudinary = require('../config/cloudinary');
 const pool = require('../config/db');
+const { esFinDeSemana } = require('../utils/eventos');
 
-const PUNTOS_POR_TIPO = {
+const BASE_PUNTOS_POR_TIPO = {
     imagen: 50,
     video: 100
+};
+
+// Fin de semana (viernes a domingo) = puntos dobles. Se calcula en el momento de publicar,
+// nunca antes, para que quede fijo el valor exacto que se otorgó (ver historial_puntos).
+const calcularPuntosPublicacion = (tipoContenido) => {
+    const base = BASE_PUNTOS_POR_TIPO[tipoContenido] || 0;
+    return esFinDeSemana() ? base * 2 : base;
 };
 
 // Sube el archivo temporal (guardado en disco por Multer) a Cloudinary.
@@ -54,7 +62,7 @@ const crearPublicacion = async (req, res) => {
 
         const tipoContenido = req.file.mimetype.startsWith('video/') ? 'video' : 'imagen';
         const resourceType = tipoContenido === 'video' ? 'video' : 'image';
-        const puntosGanados = PUNTOS_POR_TIPO[tipoContenido];
+        const puntosGanados = calcularPuntosPublicacion(tipoContenido);
 
         let resultadoCloudinary;
         try {
@@ -104,8 +112,9 @@ const crearPublicacion = async (req, res) => {
                 [resultado.insertId]
             );
 
+            const baseDelTipo = BASE_PUNTOS_POR_TIPO[tipoContenido];
             res.status(201).json({
-                message: `¡Publicación creada! Ganaste ${puntosGanados} puntos.`,
+                message: `¡Publicación creada! Ganaste ${puntosGanados} puntos${puntosGanados > baseDelTipo ? ' (¡doble por el fin de semana!)' : ''}.`,
                 publicacion: publicaciones[0],
                 puntosGanados
             });
@@ -277,7 +286,18 @@ const eliminarPublicacion = async (req, res) => {
             return res.status(403).json({ error: 'No puedes eliminar publicaciones de otros usuarios.' });
         }
 
-        const puntosARestar = PUNTOS_POR_TIPO[publicacion.tipo_contenido] || 0;
+        // Revertimos el monto REAL que se otorgó (historial_puntos), no el flat rate actual:
+        // si esta publicación se creó en un fin de semana con puntos dobles y se borra en un
+        // día normal, restar el flat rate dejaría al usuario con puntos de más.
+        // Hay que consultarlo ANTES del DELETE: la FK de historial_puntos hace SET NULL en
+        // publicacion_id al borrar la publicación, así que después ya no se podría encontrar.
+        const [historial] = await pool.execute(
+            `SELECT puntos FROM historial_puntos
+             WHERE publicacion_id = ? AND puntos > 0
+             ORDER BY creado_en ASC LIMIT 1`,
+            [id]
+        );
+        const puntosARestar = historial.length > 0 ? historial[0].puntos : 0;
         const resourceType = publicacion.tipo_contenido === 'video' ? 'video' : 'image';
 
         try {

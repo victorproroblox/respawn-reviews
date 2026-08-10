@@ -1,7 +1,12 @@
 // src/controllers/calificacionesController.js
 const pool = require('../config/db');
+const { esFinDeSemana } = require('../utils/eventos');
 
-const PUNTOS_POR_CALIFICACION = 150;
+const BASE_PUNTOS_POR_CALIFICACION = 150;
+
+// Fin de semana (viernes a domingo) = puntos dobles. Se calcula en el momento de guardar,
+// nunca antes, para que quede fijo el valor exacto que se otorgó (ver historial_puntos).
+const calcularPuntosCalificacion = () => (esFinDeSemana() ? BASE_PUNTOS_POR_CALIFICACION * 2 : BASE_PUNTOS_POR_CALIFICACION);
 
 const esPuntuacionValida = (puntuacion) => {
     const num = Number(puntuacion);
@@ -59,6 +64,8 @@ const guardarCalificacion = async (req, res) => {
         }
 
         // --- NO EXISTE: se crea y se otorgan los puntos ---
+        const puntosGanados = calcularPuntosCalificacion();
+
         const connection = await pool.getConnection();
         try {
             await connection.beginTransaction();
@@ -71,13 +78,13 @@ const guardarCalificacion = async (req, res) => {
 
             await connection.execute(
                 'UPDATE usuarios SET puntos = puntos + ? WHERE id = ?',
-                [PUNTOS_POR_CALIFICACION, req.user.id]
+                [puntosGanados, req.user.id]
             );
 
             await connection.execute(
                 `INSERT INTO historial_puntos (usuario_id, calificacion_id, puntos, motivo)
                  VALUES (?, ?, ?, 'calificacion_juego')`,
-                [req.user.id, resultado.insertId, PUNTOS_POR_CALIFICACION]
+                [req.user.id, resultado.insertId, puntosGanados]
             );
 
             await connection.commit();
@@ -92,9 +99,9 @@ const guardarCalificacion = async (req, res) => {
             );
 
             res.status(201).json({
-                message: `¡Reseña publicada! Ganaste ${PUNTOS_POR_CALIFICACION} puntos.`,
+                message: `¡Reseña publicada! Ganaste ${puntosGanados} puntos${puntosGanados > BASE_PUNTOS_POR_CALIFICACION ? ' (¡doble por el fin de semana!)' : ''}.`,
                 calificacion: creada[0],
-                puntosGanados: PUNTOS_POR_CALIFICACION
+                puntosGanados
             });
         } catch (dbError) {
             await connection.rollback();

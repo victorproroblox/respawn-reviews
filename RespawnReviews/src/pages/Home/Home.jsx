@@ -5,6 +5,8 @@ import { Button } from '../../components/Button/Button';
 import { ContactForm } from '../../components/ContactForm/ContactForm';
 import { TopJuegosChart } from '../../components/TopJuegosChart/TopJuegosChart';
 import { DestacadoSemana } from '../../components/DestacadoSemana/DestacadoSemana';
+import { GotyNominacion } from '../../components/GotyNominacion/GotyNominacion';
+import { fetchEstadoEventos } from '../../services/eventosApi';
 import { MAPAS } from '../Mapas/mapasConfig';
 import {
   Zap, Trophy, Award, Mail, Gamepad2, Star, Camera, ArrowRight, Map, Loader2,
@@ -45,18 +47,16 @@ const featureCards = [
 export const Home = () => {
   // ESTADOS PARA NUESTROS EVENTOS
   const [isWeekend, setIsWeekend] = useState(false);
-  const [isGotySeason, setIsGotySeason] = useState(false); // Práctica 7
+  const [isGotySeason, setIsGotySeason] = useState(false);
 
+  // El estado de los eventos (fin de semana / temporada GOTY) se calcula en el backend
+  // (backend/src/utils/eventos.js) y no aquí con new Date(): así el banner que se ve y los
+  // puntos dobles/nominaciones que de verdad se otorgan nunca pueden desincronizarse.
   useEffect(() => {
-    // 1. Lógica de Fin de Semana (Hero)
-    const currentDay = new Date().getDay();
-    const checkWeekend = currentDay === 0 || currentDay === 5 || currentDay === 6;
-    setIsWeekend(checkWeekend);
-
-    // 2. Lógica de Temporada GOTY (Práctica 7)
-    const currentMonth = new Date().getMonth();
-    const checkGoty = currentMonth === 10 || currentMonth === 11;
-    setIsGotySeason(checkGoty);
+    fetchEstadoEventos().then(({ esFinDeSemana, esTemporadaGoty }) => {
+      setIsWeekend(esFinDeSemana);
+      setIsGotySeason(esTemporadaGoty);
+    });
   }, []);
 
   return (
@@ -66,7 +66,7 @@ export const Home = () => {
       {isGotySeason && (
         <div className={styles.gotyBanner}>
           <Award size={24} color="#facc15" />
-          <span>¡La Temporada de Premios ha comenzado! Apoya a tus favoritos.</span>
+          <span>¡La <strong>Temporada de Premios GOTY</strong> ha comenzado! Nomina a tus favoritos más abajo.</span>
         </div>
       )}
 
@@ -125,6 +125,13 @@ export const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Cuadro de nominación GOTY: solo aparece durante la temporada de premios */}
+      {isGotySeason && (
+        <section className={styles.section}>
+          <GotyNominacion />
+        </section>
+      )}
 
       {/* Juego y clip de la semana (lo elige el Editor desde su panel) */}
       <DestacadoSemana />

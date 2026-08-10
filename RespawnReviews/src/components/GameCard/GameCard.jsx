@@ -9,7 +9,7 @@ export const GameCard = ({ game, isGotySeason }) => {
     <Link to={`/game/${game.id}`} className={styles.cardLink}>
       <div className={styles.gameCard}>
         <div className={styles.imageContainer}>
-          <img src={game.image} alt={game.title} className={styles.image} />
+          <img src={game.image} alt={game.title} className={styles.image} loading="lazy" />
           {game.score !== 'N/A' && (
             <div className={styles.scoreBadge}>
               <Star size={14} fill="currentColor" /> {game.score}

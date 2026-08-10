@@ -37,7 +37,7 @@ export const PostCard = ({ post, isOwner, onEdit, onDelete }) => {
         {post.tipo_contenido === 'video' ? (
           <video src={post.url_contenido} controls className={styles.media} />
         ) : (
-          <img src={post.url_contenido} alt={post.descripcion} className={styles.media} />
+          <img src={post.url_contenido} alt={post.descripcion} className={styles.media} loading="lazy" />
         )}
       </div>
 
@@ -45,7 +45,7 @@ export const PostCard = ({ post, isOwner, onEdit, onDelete }) => {
         {post.juego_api_id && (
           <Link to={`/game/${post.juego_api_id}`} className={styles.gameBadge}>
             {post.juego_imagen ? (
-              <img src={post.juego_imagen} alt={post.juego_nombre} className={styles.gameBadgeImage} />
+              <img src={post.juego_imagen} alt={post.juego_nombre} className={styles.gameBadgeImage} loading="lazy" />
             ) : (
               <span className={styles.gameBadgeImageFallback}><Gamepad2 size={14} /></span>
             )}

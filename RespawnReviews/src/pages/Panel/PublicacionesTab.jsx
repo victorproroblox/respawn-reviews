@@ -68,7 +68,7 @@ export const PublicacionesTab = () => {
             {post.tipo_contenido === 'video' ? (
               <video src={post.url_contenido} className={styles.thumbMedia} muted />
             ) : (
-              <img src={post.url_contenido} alt={post.descripcion} className={styles.thumbMedia} />
+              <img src={post.url_contenido} alt={post.descripcion} className={styles.thumbMedia} loading="lazy" />
             )}
             <button
               type="button"

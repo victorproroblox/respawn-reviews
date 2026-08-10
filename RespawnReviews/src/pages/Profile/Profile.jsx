@@ -129,7 +129,7 @@ export const Profile = () => {
                 {p.tipo_contenido === 'video' ? (
                   <video src={p.url_contenido} className={styles.postThumbMedia} muted />
                 ) : (
-                  <img src={p.url_contenido} alt={p.descripcion} className={styles.postThumbMedia} />
+                  <img src={p.url_contenido} alt={p.descripcion} className={styles.postThumbMedia} loading="lazy" />
                 )}
                 {p.juego_nombre && <span className={styles.postThumbGame}>{p.juego_nombre}</span>}
               </div>

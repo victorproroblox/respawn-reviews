@@ -79,7 +79,7 @@ export const TopJuegosChart = () => {
             </div>
 
             {juego.imagen ? (
-              <img src={juego.imagen} alt={juego.juego_nombre} className={styles.thumb} />
+              <img src={juego.imagen} alt={juego.juego_nombre} className={styles.thumb} loading="lazy" />
             ) : (
               <span className={styles.thumbFallback}>
                 <Trophy size={16} />
