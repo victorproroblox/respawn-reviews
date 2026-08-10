@@ -12,17 +12,49 @@ const ROLES_ASIGNABLES = { 1: 'Administrador', 2: 'Editor' };
 const listarUsuarios = async (req, res) => {
     try {
         const [usuarios] = await pool.query(
-            `SELECT u.id, u.nombre, u.email, u.avatar_url AS avatarUrl, u.puntos, u.creado_en,
+            `SELECT u.id, u.nombre, u.email, u.avatar_url AS avatarUrl, u.puntos, u.creado_en, u.activo,
                     COALESCE(r.nombre, 'Usuario') AS rol
              FROM usuarios u
              LEFT JOIN usuario_rol ur ON ur.usuario_id = u.id
              LEFT JOIN roles r ON r.id = ur.rol_id
              ORDER BY u.creado_en DESC`
         );
-        res.json({ usuarios });
+        // activo llega de MySQL como 0/1 (TINYINT); lo pasamos a booleano real para el frontend
+        res.json({ usuarios: usuarios.map((u) => ({ ...u, activo: Boolean(u.activo) })) });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error interno del servidor al obtener los usuarios.' });
+    }
+};
+
+// --- HABILITAR / DESHABILITAR UN USUARIO ---
+// Un usuario deshabilitado no puede iniciar sesión, y si tenía una sesión abierta se le
+// corta en su siguiente petición (ver authMiddleware.js).
+const cambiarEstadoUsuario = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { activo } = req.body;
+
+        if (typeof activo !== 'boolean') {
+            return res.status(400).json({ error: 'Falta indicar el nuevo estado (activo: true/false).' });
+        }
+        if (Number(id) === req.user.id && !activo) {
+            return res.status(400).json({ error: 'No puedes deshabilitar tu propia cuenta.' });
+        }
+
+        const [resultado] = await pool.execute('UPDATE usuarios SET activo = ? WHERE id = ?', [activo, id]);
+        if (resultado.affectedRows === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado.' });
+        }
+
+        res.json({
+            message: activo ? 'Usuario habilitado.' : 'Usuario deshabilitado.',
+            id: Number(id),
+            activo,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor al cambiar el estado del usuario.' });
     }
 };
 
@@ -151,6 +183,7 @@ const listarCalificacionesAdmin = async (req, res) => {
 module.exports = {
     listarUsuarios,
     crearUsuarioConRol,
+    cambiarEstadoUsuario,
     listarPublicacionesAdmin,
     listarCalificacionesAdmin,
 };

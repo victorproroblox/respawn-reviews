@@ -1,8 +1,8 @@
 // src/pages/Panel/UsuariosTab.jsx
 import { useEffect, useState } from 'react';
-import { Loader2, UserPlus, Mail, Calendar, Trophy, X } from 'lucide-react';
+import { Loader2, UserPlus, Mail, Calendar, Trophy, X, Ban, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { fetchUsuariosAdmin } from '../../services/adminApi';
+import { fetchUsuariosAdmin, cambiarEstadoUsuario } from '../../services/adminApi';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { Button } from '../../components/Button/Button';
 import { CrearStaffForm } from './CrearStaffForm';
@@ -18,10 +18,11 @@ const claseRol = (rol) => {
 };
 
 export const UsuariosTab = () => {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [usuarios, setUsuarios] = useState(null);
   const [error, setError] = useState(null);
   const [mostrarForm, setMostrarForm] = useState(false);
+  const [cambiandoId, setCambiandoId] = useState(null);
 
   const cargar = () => {
     fetchUsuariosAdmin(token)
@@ -32,9 +33,26 @@ export const UsuariosTab = () => {
   useEffect(cargar, [token]);
 
   const handleCreado = (nuevoUsuario) => {
-    setUsuarios((prev) => [{ ...nuevoUsuario, avatarUrl: null }, ...(prev || [])]);
+    setUsuarios((prev) => [{ ...nuevoUsuario, avatarUrl: null, activo: true }, ...(prev || [])]);
     // No cerramos el formulario aquí: así el admin alcanza a ver el mensaje de éxito
     // y puede dar de alta a otra persona sin tener que volver a abrirlo.
+  };
+
+  const handleCambiarEstado = async (usuario) => {
+    const nuevoEstado = !usuario.activo;
+    if (!nuevoEstado && !window.confirm(`¿Deshabilitar a ${usuario.nombre}? No podrá iniciar sesión hasta que lo vuelvas a habilitar.`)) {
+      return;
+    }
+
+    setCambiandoId(usuario.id);
+    try {
+      await cambiarEstadoUsuario(usuario.id, nuevoEstado, token);
+      setUsuarios((prev) => prev.map((u) => (u.id === usuario.id ? { ...u, activo: nuevoEstado } : u)));
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      setCambiandoId(null);
+    }
   };
 
   return (
@@ -60,15 +78,37 @@ export const UsuariosTab = () => {
       ) : (
         <div className={styles.list}>
           {usuarios.map((usuario) => (
-            <div key={usuario.id} className={styles.row}>
+            <div key={usuario.id} className={`${styles.row} ${!usuario.activo ? styles.rowInactivo : ''}`}>
               <Avatar src={usuario.avatarUrl} alt={usuario.nombre} size={40} />
               <div className={styles.mainInfo}>
                 <span className={styles.nombre}>{usuario.nombre}</span>
                 <span className={styles.email}><Mail size={12} /> {usuario.email}</span>
               </div>
               <span className={`${styles.rolBadge} ${claseRol(usuario.rol)}`}>{usuario.rol}</span>
+              <span className={`${styles.estadoBadge} ${usuario.activo ? styles.estadoActivo : styles.estadoInactivo}`}>
+                {usuario.activo ? 'Activo' : 'Inactivo'}
+              </span>
               <span className={styles.puntos}><Trophy size={13} /> {usuario.puntos} pts</span>
               <span className={styles.fecha}><Calendar size={13} /> {formatearFecha(usuario.creado_en)}</span>
+              {usuario.id === user.id ? (
+                <span className={styles.tuCuenta}>Tu cuenta</span>
+              ) : (
+                <button
+                  type="button"
+                  className={`${styles.toggleBtn} ${usuario.activo ? styles.toggleDeshabilitar : styles.toggleHabilitar}`}
+                  onClick={() => handleCambiarEstado(usuario)}
+                  disabled={cambiandoId === usuario.id}
+                >
+                  {cambiandoId === usuario.id ? (
+                    <Loader2 className={styles.spinnerBtn} size={14} />
+                  ) : usuario.activo ? (
+                    <Ban size={14} />
+                  ) : (
+                    <ShieldCheck size={14} />
+                  )}
+                  {usuario.activo ? 'Deshabilitar' : 'Habilitar'}
+                </button>
+              )}
             </div>
           ))}
         </div>

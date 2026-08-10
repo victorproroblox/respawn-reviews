@@ -38,6 +38,21 @@ export const crearUsuarioStaff = async ({ nombre, email, password, rol }, token)
   return parseErrorOrJson(response);
 };
 
+// Habilita o deshabilita un usuario. Un usuario deshabilitado no puede iniciar sesión.
+export const cambiarEstadoUsuario = async (id, activo, token) => {
+  let response;
+  try {
+    response = await fetch(`${API_URL}/admin/usuarios/${id}/estado`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      body: JSON.stringify({ activo }),
+    });
+  } catch {
+    throw new Error('No se pudo conectar con el servidor. Intenta de nuevo más tarde.');
+  }
+  return parseErrorOrJson(response);
+};
+
 export const fetchPublicacionesAdmin = async (token, page = 1, limit = 24) => {
   let response;
   try {

@@ -79,6 +79,13 @@ const loginUsuario = async (req, res) => {
             return res.status(401).json({ error: 'Credenciales inválidas.' });
         }
 
+        // 2.5. Cuenta deshabilitada por un administrador: no entra, aunque la contraseña
+        // sea correcta. Se revisa DESPUÉS de la contraseña para no filtrar (a quien no la
+        // sepa) qué cuentas están deshabilitadas.
+        if (!user.activo) {
+            return res.status(403).json({ error: 'Tu cuenta ha sido deshabilitada. Contacta a un administrador.' });
+        }
+
         // 3. Obtener el rol del usuario
         const [roles] = await pool.execute(
             'SELECT r.nombre FROM roles r JOIN usuario_rol ur ON r.id = ur.rol_id WHERE ur.usuario_id = ?',

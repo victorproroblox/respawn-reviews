@@ -4,6 +4,7 @@ const router = express.Router();
 const {
     listarUsuarios,
     crearUsuarioConRol,
+    cambiarEstadoUsuario,
     listarPublicacionesAdmin,
     listarCalificacionesAdmin,
 } = require('../controllers/adminController');
@@ -14,6 +15,7 @@ router.use(verificarToken, verificarRol(['Administrador']));
 
 router.get('/usuarios', listarUsuarios);
 router.post('/usuarios', crearUsuarioConRol);
+router.patch('/usuarios/:id/estado', cambiarEstadoUsuario);
 router.get('/publicaciones', listarPublicacionesAdmin);
 router.get('/calificaciones', listarCalificacionesAdmin);
 
