@@ -273,3 +273,49 @@
     width: 100%;
   }
 }
+
+/* Vincular smartwatch */
+.watchForm {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.watchInput {
+  flex: 1;
+  min-width: 160px;
+  max-width: 260px;
+  padding: 0.7rem 1rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--bg-hover);
+  border-radius: var(--radius-md, 10px);
+  color: var(--text-primary, #fff);
+  font-size: 1.1rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.watchBtn {
+  padding: 0.7rem 1.4rem;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md, 10px);
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 100px;
+}
+
+.watchBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.watchOk {
+  margin-top: 0.75rem;
+  color: #4ade80;
+}

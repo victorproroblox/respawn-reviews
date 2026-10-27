@@ -17,6 +17,7 @@ const destacadoRoutes = require('./routes/destacadoRoutes');
 const eventosRoutes = require('./routes/eventosRoutes');
 const gotyRoutes = require('./routes/gotyRoutes');
 const chatbotRoutes = require('./routes/chatbotRoutes');
+const relojRoutes = require('./routes/relojRoutes');
 
 // 2. Inicializar Express
 const app = express();
@@ -38,6 +39,7 @@ app.use('/api/destacado-semana', destacadoRoutes);
 app.use('/api/eventos', eventosRoutes);
 app.use('/api/goty', gotyRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/reloj', relojRoutes);
 
 // Ruta de bienvenida
 app.get('/', (req, res) => {

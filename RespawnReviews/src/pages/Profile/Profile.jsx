@@ -1,11 +1,12 @@
 // src/pages/Profile/Profile.jsx
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Camera, Mail, Calendar, Trophy, Star, Image as ImageIcon, Loader2 } from 'lucide-react';
+import { Camera, Mail, Calendar, Trophy, Star, Image as ImageIcon, Loader2, Watch } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { meRequest } from '../../services/authApi';
 import { fetchMisCalificaciones } from '../../services/calificacionesApi';
 import { fetchMisPublicaciones } from '../../services/postsApi';
+import { vincularReloj } from '../../services/relojApi';
 import { Avatar } from '../../components/Avatar/Avatar';
 import { StarRating } from '../../components/StarRating/StarRating';
 import styles from './Profile.module.css';
@@ -26,6 +27,25 @@ export const Profile = () => {
 
   const [publicaciones, setPublicaciones] = useState([]);
   const [loadingPublicaciones, setLoadingPublicaciones] = useState(true);
+
+  const [codigoReloj, setCodigoReloj] = useState('');
+  const [vinculando, setVinculando] = useState(false);
+  const [mensajeReloj, setMensajeReloj] = useState(null); // { ok: boolean, texto: string }
+
+  const handleVincularReloj = async (e) => {
+    e.preventDefault();
+    setMensajeReloj(null);
+    setVinculando(true);
+    try {
+      const data = await vincularReloj(codigoReloj, token);
+      setMensajeReloj({ ok: true, texto: data.message });
+      setCodigoReloj('');
+    } catch (err) {
+      setMensajeReloj({ ok: false, texto: err.message });
+    } finally {
+      setVinculando(false);
+    }
+  };
 
   useEffect(() => {
     meRequest(token).then(setPerfil).catch(() => {});
@@ -90,6 +110,32 @@ export const Profile = () => {
           <span className={styles.pointsLabel}>puntos</span>
         </div>
       </div>
+
+      {/* Smartwatch */}
+      <section className={styles.section}>
+        <h2><Watch size={20} color="var(--accent-cyan)" /> Vincular mi reloj</h2>
+        <p className={styles.emptyText}>
+          Abre RespawnReviews en tu reloj Wear OS: te mostrará un código de 6 caracteres. Escríbelo aquí para ver tus
+          puntos, avisos y el destacado de la semana en el reloj.
+        </p>
+        <form className={styles.watchForm} onSubmit={handleVincularReloj}>
+          <input
+            className={styles.watchInput}
+            value={codigoReloj}
+            onChange={(e) => setCodigoReloj(e.target.value.toUpperCase())}
+            placeholder="Código del reloj"
+            maxLength={7}
+            autoComplete="off"
+            aria-label="Código del reloj"
+          />
+          <button type="submit" className={styles.watchBtn} disabled={vinculando || codigoReloj.trim().length < 6}>
+            {vinculando ? <Loader2 size={16} className={styles.spinner} /> : 'Vincular'}
+          </button>
+        </form>
+        {mensajeReloj && (
+          <p className={mensajeReloj.ok ? styles.watchOk : styles.errorText}>{mensajeReloj.texto}</p>
+        )}
+      </section>
 
       {/* Calificaciones */}
       <section className={styles.section}>
