@@ -2,6 +2,7 @@
 const fs = require('fs/promises');
 const cloudinary = require('../config/cloudinary');
 const pool = require('../config/db');
+const { avisarUsuario } = require('../utils/fcm');
 const { esFinDeSemana } = require('../utils/eventos');
 
 const BASE_PUNTOS_POR_TIPO = {
@@ -101,6 +102,7 @@ const crearPublicacion = async (req, res) => {
             );
 
             await connection.commit();
+            avisarUsuario(req.user.id); // notificación push al reloj (si está vinculado)
 
             const [publicaciones] = await pool.execute(
                 `SELECT p.id, p.tipo_contenido, p.url_contenido, p.descripcion, p.creado_en, p.actualizado_en,

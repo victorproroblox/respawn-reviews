@@ -9,6 +9,6 @@ const uploadImagen = require('../middlewares/avatarUploadMiddleware'); // genér
 router.use(verificarToken, verificarRol(['Editor']));
 
 router.get('/publicaciones', listarPublicacionesParaElegir);
-router.post('/destacado-semana', uploadImagen.single('imagen'), elegirDestacadoSemana);
+router.post('/destacado-semana', uploadImagen.fields([{ name: 'imagen', maxCount: 1 }, { name: 'imagenReloj', maxCount: 1 }]), elegirDestacadoSemana);
 
 module.exports = router;

@@ -9,6 +9,7 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const pool = require('../config/db');
 const { esFinDeSemana } = require('../utils/eventos');
+const { asegurarTablasReloj } = require('../utils/esquema');
 
 const ALFABETO = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // sin 0/O, 1/I/L para que sea fácil de leer en el reloj
 const VIGENCIA_MINUTOS = 10;
@@ -20,18 +21,7 @@ const ID_BASE_DESTACADO = 3_000_000_000;
 let tablaLista = false;
 const asegurarTabla = async () => {
     if (tablaLista) return;
-    await pool.query(`
-        CREATE TABLE IF NOT EXISTS reloj_vinculaciones (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            device_id VARCHAR(48) NOT NULL UNIQUE,
-            codigo VARCHAR(8) NOT NULL,
-            usuario_id INT NULL,
-            expira_en DATETIME NOT NULL,
-            creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            INDEX idx_reloj_codigo (codigo),
-            CONSTRAINT fk_reloj_usuario FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-        )
-    `);
+    await asegurarTablasReloj();
     tablaLista = true;
 };
 
@@ -216,7 +206,7 @@ const estadoReloj = async (req, res) => {
 
         // Destacado de la semana (la elección más reciente del Editor)
         const [destacados] = await pool.query(
-            `SELECT d.id, d.juego_nombre, d.imagen_url, UNIX_TIMESTAMP(d.creado_en) * 1000 AS ts,
+            `SELECT d.id, d.juego_nombre, d.imagen_url, d.imagen_reloj_url, UNIX_TIMESTAMP(d.creado_en) * 1000 AS ts,
                     p.tipo_contenido, p.descripcion, u.nombre AS usuario_nombre
              FROM juego_clip_semana d
              JOIN publicaciones p ON p.id = d.publicacion_id
@@ -233,7 +223,8 @@ const estadoReloj = async (req, res) => {
                 autor: d.usuario_nombre,
                 tipo: d.tipo_contenido,
                 descripcion: d.descripcion || '',
-                imagenUrl: d.imagen_url || '',
+                // Si el Editor subió una imagen aparte para el reloj se usa esa; si no, la del juego
+                imagenUrl: d.imagen_reloj_url || d.imagen_url || '',
                 creadoEn: Number(d.ts),
             };
             // Solo es noticia durante las dos semanas siguientes a que el Editor lo eligió
@@ -267,4 +258,24 @@ const estadoReloj = async (req, res) => {
     }
 };
 
-module.exports = { iniciarVinculacion, vincularReloj, estadoVinculacion, estadoReloj };
+// --- 3. El reloj registra su token de notificaciones push (Firebase Cloud Messaging) ---
+const registrarFcm = async (req, res) => {
+    try {
+        await asegurarTabla();
+        const fcmToken = String(req.body.fcmToken || '').trim();
+        if (fcmToken.length < 20 || fcmToken.length > 512) {
+            return res.status(400).json({ error: 'Token de notificaciones inválido.' });
+        }
+        await pool.query(
+            `INSERT INTO reloj_dispositivos (usuario_id, fcm_token) VALUES (?, ?)
+             ON DUPLICATE KEY UPDATE usuario_id = VALUES(usuario_id)`,
+            [req.user.id, fcmToken]
+        );
+        res.json({ message: 'Notificaciones del reloj activadas.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor al registrar el reloj.' });
+    }
+};
+
+module.exports = { iniciarVinculacion, vincularReloj, estadoVinculacion, estadoReloj, registrarFcm };

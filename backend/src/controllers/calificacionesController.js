@@ -1,5 +1,6 @@
 // src/controllers/calificacionesController.js
 const pool = require('../config/db');
+const { avisarUsuario } = require('../utils/fcm');
 const { esFinDeSemana } = require('../utils/eventos');
 
 const BASE_PUNTOS_POR_CALIFICACION = 150;
@@ -88,6 +89,7 @@ const guardarCalificacion = async (req, res) => {
             );
 
             await connection.commit();
+            avisarUsuario(req.user.id); // notificación push al reloj (si está vinculado)
 
             const [creada] = await pool.execute(
                 `SELECT c.id, c.juego_api_id, c.juego_nombre, c.puntuacion, c.comentario, c.creado_en, c.actualizado_en,

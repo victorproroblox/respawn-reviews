@@ -18,6 +18,7 @@ const eventosRoutes = require('./routes/eventosRoutes');
 const gotyRoutes = require('./routes/gotyRoutes');
 const chatbotRoutes = require('./routes/chatbotRoutes');
 const relojRoutes = require('./routes/relojRoutes');
+const { asegurarEsquema } = require('./utils/esquema');
 
 // 2. Inicializar Express
 const app = express();
@@ -60,6 +61,8 @@ app.use((err, req, res, next) => {
 
 // 6. Encender el servidor
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor corriendo a máxima potencia en el puerto ${PORT}`);
+asegurarEsquema().finally(() => {
+    app.listen(PORT, () => {
+        console.log(`🚀 Servidor corriendo a máxima potencia en el puerto ${PORT}`);
+    });
 });

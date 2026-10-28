@@ -16,6 +16,9 @@ export const EditorDashboard = () => {
   const [imagen, setImagen] = useState(null);
   const [previewImagen, setPreviewImagen] = useState(null);
   const fileInputRef = useRef(null);
+  const [imagenReloj, setImagenReloj] = useState(null);
+  const [previewReloj, setPreviewReloj] = useState(null);
+  const relojInputRef = useRef(null);
 
   const [publicaciones, setPublicaciones] = useState([]);
   const [page, setPage] = useState(1);
@@ -56,6 +59,14 @@ export const EditorDashboard = () => {
     setPreviewImagen(URL.createObjectURL(file));
   };
 
+  const handleImagenRelojChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (previewReloj) URL.revokeObjectURL(previewReloj);
+    setImagenReloj(file);
+    setPreviewReloj(URL.createObjectURL(file));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -67,14 +78,17 @@ export const EditorDashboard = () => {
 
     setGuardando(true);
     try {
-      const data = await elegirDestacadoSemana({ juego, imagen, publicacionId: clipSeleccionado.id }, token);
+      const data = await elegirDestacadoSemana({ juego, imagen, imagenReloj, publicacionId: clipSeleccionado.id }, token);
       setExito(data.message);
       setActual(data.destacado);
       setJuego(null);
       setImagen(null);
       setPreviewImagen(null);
+      setImagenReloj(null);
+      setPreviewReloj(null);
       setClipSeleccionado(null);
       if (fileInputRef.current) fileInputRef.current.value = '';
+      if (relojInputRef.current) relojInputRef.current.value = '';
     } catch (err) {
       setError(err.message);
     } finally {
@@ -144,6 +158,25 @@ export const EditorDashboard = () => {
               <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImagenChange} hidden />
             </label>
           </div>
+        </div>
+
+        <div className={styles.fieldGroup}>
+          <label>Imagen para el reloj (opcional)</label>
+          <label className={styles.dropzone}>
+            {previewReloj ? (
+              <img src={previewReloj} alt="Vista previa para el reloj" className={styles.dropzonePreview} />
+            ) : (
+              <>
+                <ImagePlus size={24} />
+                <span>Sube una imagen para el reloj</span>
+              </>
+            )}
+            <input ref={relojInputRef} type="file" accept="image/*" onChange={handleImagenRelojChange} hidden />
+          </label>
+          <small>
+            Se recorta sola a la proporción del reloj (casi cuadrada), centrando lo importante: no importa el tamaño.
+            Si no subes ninguna, el reloj usa la imagen del juego.
+          </small>
         </div>
 
         <div className={styles.fieldGroup}>

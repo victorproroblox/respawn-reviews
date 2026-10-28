@@ -22,13 +22,14 @@ export const fetchPublicacionesParaElegir = async (token, page = 1, limit = 24) 
   return parseErrorOrJson(response);
 };
 
-// juego: { id, title }, imagen: File, publicacionId: id de la publicación elegida como clip
-export const elegirDestacadoSemana = async ({ juego, imagen, publicacionId }, token) => {
+// juego: { id, title }, imagen: File, imagenReloj: File opcional, publicacionId: id de la publicación elegida como clip
+export const elegirDestacadoSemana = async ({ juego, imagen, imagenReloj, publicacionId }, token) => {
   const formData = new FormData();
   formData.append('juegoApiId', juego.id);
   formData.append('juegoNombre', juego.title);
   formData.append('publicacionId', publicacionId);
   formData.append('imagen', imagen);
+  if (imagenReloj) formData.append('imagenReloj', imagenReloj);
 
   let response;
   try {
